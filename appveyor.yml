@@ -8,9 +8,10 @@ before_build:
 - choco install codecov
 
 build_script:
-  - ps: .\build\build.ps1
-  - OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=results.trx /p:DebugType=full C:\projects\valit\tests\Valit.Tests\Valit.Tests.csproj" -filter:"+[Valit*]* -[Valit.Tests*]*" -output:".\valit_coverage.xml" -oldstyle
-  - codecov -f .\valit_coverage.xml -t $(codecov_token)
+  - cd build
+  - ps: .\build.ps1
+  - OpenCover.Console.exe -register:user -target:"C:/Program Files/dotnet/dotnet.exe" -targetargs:"test --logger:trx;LogFileName=results.trx /p:DebugType=full C:\projects\chronicle\src\Chronicle.Test\Chronicle.Tests.csproj" -filter:"+[Chronicle*]* -[Chronicle.Test*]*" -output:".\chronicle_coverage.xml" -oldstyle
+  - codecov -f .\chronicle_coverage.xml -t $(codecov_token)
 
 test: off
 
