@@ -1,5 +1,5 @@
 # Chronicle
-Implementation of distributed saga pattern for .NET Core
+Implementation of saga pattern for .NET Core
 
 
 # Icon
