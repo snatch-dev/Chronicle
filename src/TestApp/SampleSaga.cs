@@ -4,8 +4,15 @@ using Chronicle;
 
 namespace TestApp
 {
-    public class Message1 { }
-    public class Message2 { }
+    public class Message1
+    {
+        public string Text { get; set; }
+    }
+
+    public class Message2
+    {
+        public string Text { get; set; }
+    }
 
     public class SagaData
     {
@@ -32,14 +39,15 @@ namespace TestApp
         public Task CompensateAsync(Message1 message)
         {
             Console.BackgroundColor = ConsoleColor.Red;
-            Console.WriteLine("COMPANSATE M1");
+            Console.WriteLine($"COMPANSATE M1 with message: {message.Text}");
             return Task.CompletedTask;
         }
 
         public Task CompensateAsync(Message2 message)
         {
             Console.BackgroundColor = ConsoleColor.Blue;
-            Console.WriteLine("COMPANSATE M2");
+            Console.WriteLine($"COMPANSATE M2 with message: {message.Text}");
+
             return Task.CompletedTask;
         }
 

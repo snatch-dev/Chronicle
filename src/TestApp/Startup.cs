@@ -27,8 +27,15 @@ namespace TestApp
 
             var id = Guid.NewGuid();
 
-            coordinator.DispatchAsync(id, new Message1());
-            coordinator.DispatchAsync(id, new Message2());
+            coordinator.DispatchAsync(id, new Message1
+            {
+                Text = "This message will be used one day..."
+            });
+
+            coordinator.DispatchAsync(id, new Message2
+            {
+                Text = "But this one will be printed first! (We compensate from the end to beggining of the log)"
+            });
 
             Console.ReadLine();
         }
