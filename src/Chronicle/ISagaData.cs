@@ -2,9 +2,10 @@ using System;
 
 namespace Chronicle
 {
-    public interface ISagaData
+    internal interface ISagaData<TData> where TData : class
     {
-        Guid Id { get; set; }
-        SagaStates State { get; set; }
+        Guid SagaId { get; }
+        SagaStates State { get; }
+        TData Data { get; }
     }
 }

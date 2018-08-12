@@ -1,15 +1,18 @@
 using System;
-using System.Threading.Tasks;
 
 namespace Chronicle.Sagas
 {
     internal interface ISaga
     {
-        SagaStates GetState();
+        Guid Id { get; }
+        SagaStates State { get; }
+        void Complete();
+        void Reject();
     }
 
-    internal interface ISaga<TData> : ISaga where TData : ISagaData
+    internal interface ISaga<TData> : ISaga where TData : class
     {
         TData Data { get; }
+        void Initialize(Guid id, SagaStates state, TData data);
     }
 }

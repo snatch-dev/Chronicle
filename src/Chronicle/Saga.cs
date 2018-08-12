@@ -5,47 +5,21 @@ using Chronicle.Sagas;
 
 namespace Chronicle
 {
-    public abstract class Saga<TData> : ISaga<TData>, ISagaPersister<TData> where TData : class, ISagaData, new()
+    public abstract class Saga<TData> : ISaga<TData> where TData : class
     {
+        public Guid Id { get; private set; }
+
+        public SagaStates State { get; protected set; }
+
         public TData Data { get; protected set; }
-        
-        private ISagaDataRepository<TData> _repository;
 
-        public SagaStates GetState()
-            => Data.State;
+        public virtual void Initialize(Guid id, SagaStates state, TData data)
+            => (Id, State, Data) = (id, state, data);
 
-        void ISagaPersister<TData>.SetPersister(ISagaDataRepository<TData> repository)
-            => _repository = repository;
+        public virtual void Complete()
+            => State = SagaStates.Completed;
 
-        async Task ISagaPersister.ReadAsync(Guid id)
-        {
-            var data = await _repository.ReadAsync(id);
-
-            if (data is null)
-            {
-                data = new TData
-                {
-                    Id = id,
-                    State = SagaStates.Pending
-                };
-            }
-
-            Data = data;
-        }
-
-        async Task ISagaPersister.WriteAsync()
-            => await _repository.WriteAsync(Data);
-
-        async Task ISagaPersister.CompleteAsync()
-        {
-            Data.State = SagaStates.Completed;
-            await ((ISagaPersister)this).WriteAsync();
-        }
-
-        async Task ISagaPersister.RejectAsync()
-        {
-            Data.State = SagaStates.Rejected;
-            await ((ISagaPersister)this).WriteAsync();
-        }
+        public virtual void Reject()
+            => State = SagaStates.Rejected;
     }
 }
