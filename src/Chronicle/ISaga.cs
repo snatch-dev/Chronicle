@@ -1,8 +1,8 @@
 using System;
 
-namespace Chronicle.Sagas
+namespace Chronicle
 {
-    internal interface ISaga
+    public interface ISaga
     {
         Guid Id { get; }
         SagaStates State { get; }
@@ -10,7 +10,7 @@ namespace Chronicle.Sagas
         void Reject();
     }
 
-    internal interface ISaga<TData> : ISaga where TData : class
+    public interface ISaga<TData> : ISaga where TData : class
     {
         TData Data { get; }
         void Initialize(Guid id, SagaStates state, TData data);

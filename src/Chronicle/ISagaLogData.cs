@@ -1,8 +1,8 @@
 using System;
 
-namespace Chronicle.Persistance
+namespace Chronicle
 {
-    internal interface ISagaLogData
+    public interface ISagaLogData
     {
         Guid SagaId { get; }
         long CreatedAt { get; }

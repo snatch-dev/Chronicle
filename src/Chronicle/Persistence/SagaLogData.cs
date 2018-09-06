@@ -1,7 +1,7 @@
 using System;
 using Chronicle.Utils;
 
-namespace Chronicle.Persistance
+namespace Chronicle.Persistence
 {
     internal class SagaLogData : ISagaLogData
     {
