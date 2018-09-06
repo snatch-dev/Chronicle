@@ -1,4 +1,4 @@
-using Chronicle.Persistance;
+using Chronicle.Persistence;
 using Chronicle.Sagas;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace Chronicle.Persistance
+namespace Chronicle.Persistence
 {
     internal class SagaData<TData> : ISagaData<TData> where TData : class
     {

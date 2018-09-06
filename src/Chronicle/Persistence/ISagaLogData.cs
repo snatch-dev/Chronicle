@@ -1,6 +1,6 @@
 using System;
 
-namespace Chronicle.Persistance
+namespace Chronicle.Persistence
 {
     internal interface ISagaLogData
     {

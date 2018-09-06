@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Chronicle.Persistance
+namespace Chronicle.Persistence
 {
     internal interface ISagaDataRepository<TData> where TData : class
     {
