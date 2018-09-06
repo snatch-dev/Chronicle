@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Chronicle.Persistance
+namespace Chronicle.Persistence
 {
     internal class InMememorySagaLog : ISagaLog
     {

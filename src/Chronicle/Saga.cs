@@ -1,7 +1,4 @@
 using System;
-using System.Threading.Tasks;
-using Chronicle.Persistence;
-using Chronicle.Sagas;
 
 namespace Chronicle
 {

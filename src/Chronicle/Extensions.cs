@@ -1,4 +1,5 @@
-using Chronicle.Persistence;
+using System;
+using Chronicle.Builders;
 using Chronicle.Sagas;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -6,11 +7,22 @@ namespace Chronicle
 {
     public static class Extensions
     {
-        public static void AddChronicle(this IServiceCollection services)
+        public static IServiceCollection AddChronicle(this IServiceCollection services, Action<IChronicleBuilder> build = null)
         {
             services.AddTransient(typeof(ISagaCoordinator<,>), typeof(SagaCoordinator<,>));
-            services.AddSingleton(typeof(ISagaDataRepository<>), typeof(InMemorySagaDataRepository<>));
-            services.AddSingleton(typeof(ISagaLog), typeof(InMememorySagaLog));
+
+            var chronicleBuilder = new ChronicleBuilder(services);
+
+            if (build is null)
+            {
+                chronicleBuilder.UseInMemoryPersistence();
+            }
+            else
+            {
+                build(chronicleBuilder);
+            }
+
+            return services;
         }
     }
 }

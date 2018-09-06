@@ -1,6 +1,6 @@
 using System;
 
-namespace Chronicle.Sagas
+namespace Chronicle
 {
     public interface ISaga
     {
