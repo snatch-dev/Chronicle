@@ -54,7 +54,7 @@ namespace Chronicle.Sagas
             }
             else
             {
-                throw new InvalidOperationException("Saga does not handle given type of message.");
+                throw new ChronicleException("Saga does not handle given type of message.");
             }
         }
 
