@@ -1,7 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+      <Title>Chronicle</Title>
+      <AssemblyName>Chronicle</AssemblyName>
+      <PackageId>Chronicle</PackageId>
+      <PackageTags>chronicle;saga</PackageTags>
+      <Description>Valit is dead simple validation for .NET Core. No more if-statements all around your code. Write nice and clean fluent validators instead!</Description>
+      <Authors>Dariusz Pawlukiewicz, Piotr Gankiewicz</Authors>
+      <PackageProjectUrl>https://github.com/chronicle-stack/Chronicle</PackageProjectUrl>
+      <PackageLicenseUrl>https://github.com/chronicle-stack/Chronicle/blob/master/LICENSE</PackageLicenseUrl>
+      <PackageIconUrl>https://avatars1.githubusercontent.com/u/42150754?s=200</PackageIconUrl>
+      <VersionPrefix>1.1.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
