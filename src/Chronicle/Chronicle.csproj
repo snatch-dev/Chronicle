@@ -6,7 +6,7 @@
       <AssemblyName>Chronicle</AssemblyName>
       <PackageId>Chronicle</PackageId>
       <PackageTags>chronicle;saga</PackageTags>
-      <Description>Valit is dead simple validation for .NET Core. No more if-statements all around your code. Write nice and clean fluent validators instead!</Description>
+      <Description>Implementation of saga pattern for .NET Core</Description>
       <Authors>Dariusz Pawlukiewicz, Piotr Gankiewicz</Authors>
       <PackageProjectUrl>https://github.com/chronicle-stack/Chronicle</PackageProjectUrl>
       <PackageLicenseUrl>https://github.com/chronicle-stack/Chronicle/blob/master/LICENSE</PackageLicenseUrl>
