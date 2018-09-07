@@ -4,6 +4,6 @@ namespace Chronicle
     {
         Pending = 0,
         Completed = 1,
-        Rejected = 3
+        Rejected = 2,
     }
 }

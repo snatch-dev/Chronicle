@@ -20,12 +20,13 @@ namespace TestApp
         public bool IsMessage2 { get; set; }
     }
 
-    public class SampleSaga : Saga<SagaData>, ISagaAsyncAction<Message1>, ISagaAsyncAction<Message2>
+    public class SampleSaga : Saga<SagaData>, ISagaStartAction<Message1>, ISagaAction<Message2>
     {
 
         public Task HandleAsync(Message2 message)
         {
-            Reject();
+            Data.IsMessage2 = true;
+            CompleteSaga();
             return Task.CompletedTask;
         }
 
