@@ -21,7 +21,7 @@ namespace Chronicle.Sagas
             _sagaLog = sagaLog;
         }
 
-        public async Task DispatchAsync<TMessage>(Guid id, TMessage message) where TMessage : class
+        public async Task ProcessAsync<TMessage>(Guid id, TMessage message) where TMessage : class
         {
             var sagaData = await _repository.ReadAsync(id).ConfigureAwait(false);
 
