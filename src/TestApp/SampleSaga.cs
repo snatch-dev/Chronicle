@@ -26,7 +26,7 @@ namespace TestApp
         public Task HandleAsync(Message2 message)
         {
             Data.IsMessage2 = true;
-            CompleteSaga();
+            Reject();
             return Task.CompletedTask;
         }
 

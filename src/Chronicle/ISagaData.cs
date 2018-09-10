@@ -2,10 +2,11 @@ using System;
 
 namespace Chronicle
 {
-    public interface ISagaData<TData> where TData : class
+    public interface ISagaData
     {
         Guid SagaId { get; }
+        Type SagaType { get; }
         SagaStates State { get; }
-        TData Data { get; }
+        object Data { get; }
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace Chronicle
 {
-    public abstract class Saga<TData> : ISaga<TData> where TData : class
+    public abstract class Saga<TData> : ISaga<TData> where TData : class, new()
     {
         public Guid Id { get; private set; }
 
@@ -10,8 +10,10 @@ namespace Chronicle
 
         public TData Data { get; protected set; }
 
-        public virtual void Initialize(Guid id, SagaStates state, TData data)
-            => (Id, State, Data) = (id, state, data);
+        object ISaga.Data => Data;
+
+        public virtual void Initialize(Guid id, SagaStates state, object data)
+            => (Id, State, Data) = (id, state, (TData) data);
 
         public virtual void Complete()
             => State = SagaStates.Completed;

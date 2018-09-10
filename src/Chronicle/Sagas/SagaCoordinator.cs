@@ -1,61 +1,73 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Chronicle.Persistence;
 
 namespace Chronicle.Sagas
 {
-    internal class SagaCoordinator<TSaga, TData> : ISagaCoordinator<TSaga, TData>  where TSaga : ISaga<TData> where TData : class, new()
+    internal class SagaCoordinator : ISagaCoordinator
     {
-        private readonly TSaga _saga;
-        private readonly ISagaDataRepository<TData> _repository;
         private readonly ISagaLog _sagaLog;
+        private readonly ISagaDataRepository _repository;
+        private readonly ISagaSeeker _sagaSeeker;
 
         public SagaCoordinator(
-            TSaga saga,
-            ISagaDataRepository<TData> repository,
-            ISagaLog sagaLog)
+            ISagaLog sagaLog,
+            ISagaDataRepository repository,
+            ISagaSeeker sagaSeeker)
         {
-            _saga = saga;
-            _repository = repository;
             _sagaLog = sagaLog;
+            _repository = repository;
+            _sagaSeeker = sagaSeeker;
         }
 
         public async Task ProcessAsync<TMessage>(Guid id, TMessage message) where TMessage : class
         {
-            var sagaData = await _repository.ReadAsync(id).ConfigureAwait(false);
+            var actions = _sagaSeeker.Seek<TMessage>().ToList();
+            var sagaTasks = new List<Task>();
 
-            if(sagaData is null)
+            foreach (var action in actions)
             {
-                if (!(_saga is ISagaStartAction<TMessage>))
+                var sagaType = action.GetType();
+                var sagaDataType = action
+                    .GetType()
+                    .GetInterfaces()
+                    .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISaga<>))
+                    .GetGenericArguments()
+                    .First();
+
+                sagaTasks.Add(ProcessAsync(id, sagaType, sagaDataType, message, action));
+            }
+
+            await Task.WhenAll(sagaTasks);
+        }
+
+        private async Task ProcessAsync<TMessage>(Guid id, Type sagaType, Type sagaDataType, TMessage message, ISagaAction<TMessage> action) where TMessage : class
+        {
+            var sagaData = await _repository.ReadAsync(id, sagaType).ConfigureAwait(false);
+
+            var saga = (ISaga)action;
+
+            if (sagaData is null)
+            {
+                if (!(action is ISagaStartAction<TMessage>))
                 {
                     return;
                 }
-                sagaData = SagaData<TData>.Create(id, SagaStates.Pending, new TData());
+                sagaData = SagaData.Create(id, sagaType, SagaStates.Pending, Activator.CreateInstance(sagaDataType));
             }
             else if(sagaData.State == SagaStates.Rejected)
             {
                 return;
             }
 
-            _saga.Initialize(sagaData.SagaId, sagaData.State, sagaData.Data);
+            saga.Initialize(sagaData.SagaId, sagaData.State, sagaData.Data);
 
-            if(_saga is ISagaAction<TMessage> action)
-            {
-                await ProcessSagaActionAsync(action, id, message).ConfigureAwait(false);
-            }
-            else
-            {
-                throw new ChronicleException("Saga does not handle given type of message.");
-            }
-        }
-
-        private async Task ProcessSagaActionAsync<TMessage>(ISagaAction<TMessage> action, Guid id, TMessage message)
-        {
             await action.HandleAsync(message);
 
-            var newSagaData = SagaData<TData>.Create(id, _saga.State, _saga.Data);
-            var sagaLogData = SagaLogData.Create(_saga.Id, message);
+            var newSagaData = SagaData.Create(id, sagaType, saga.State, saga.Data);
+            var sagaLogData = SagaLogData.Create(id, sagaType, message);
 
             var persistanceTasks = new Task[2]
             {
@@ -65,15 +77,16 @@ namespace Chronicle.Sagas
 
             await Task.WhenAll(persistanceTasks);
 
-            if (_saga.State is SagaStates.Rejected)
+            if (saga.State is SagaStates.Rejected)
             {
-                await CompensateAsync();
+                await CompensateAsync(saga, sagaType);
             }
         }
 
-        private async Task CompensateAsync()
+
+        private async Task CompensateAsync(ISaga saga, Type sagaType)
         {
-            var sagaLogDatas = await _sagaLog.GetAsync(_saga.Id);
+            var sagaLogDatas = await _sagaLog.GetAsync(saga.Id, sagaType);
             sagaLogDatas
                 .OrderByDescending(sld => sld.CreatedAt)
                 .Select(sld => sld.Message)
@@ -81,11 +94,10 @@ namespace Chronicle.Sagas
                 .ForEach(async m =>
                 {
                     var messageType = m.GetType();
-                    var sagaType = _saga.GetType();
 
                     await (Task) sagaType
                     .GetMethod(nameof(ISagaAction<object>.CompensateAsync), new[] { messageType })
-                    .Invoke(_saga, new[] { m });
+                    .Invoke(saga, new[] { m });
                 });
         }
     }

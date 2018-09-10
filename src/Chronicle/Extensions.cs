@@ -9,7 +9,8 @@ namespace Chronicle
     {
         public static IServiceCollection AddChronicle(this IServiceCollection services, Action<IChronicleBuilder> build = null)
         {
-            services.AddTransient(typeof(ISagaCoordinator<,>), typeof(SagaCoordinator<,>));
+            services.AddTransient<ISagaCoordinator, SagaCoordinator>();
+            services.AddTransient<ISagaSeeker, SagaSeeker>();
 
             var chronicleBuilder = new ChronicleBuilder(services);
 

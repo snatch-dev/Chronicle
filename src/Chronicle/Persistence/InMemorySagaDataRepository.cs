@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 
 namespace Chronicle.Persistence
 {
-    internal class InMemorySagaDataRepository<TData> : ISagaDataRepository<TData> where TData : class
+    internal class InMemorySagaDataRepository : ISagaDataRepository
     {
-        private readonly List<ISagaData<TData>> _repository;
+        private readonly List<ISagaData> _repository;
 
         public InMemorySagaDataRepository()
-            => _repository = new List<ISagaData<TData>>();
+            => _repository = new List<ISagaData>();
 
-        public async Task<ISagaData<TData>> ReadAsync(Guid sagaId)
-            => await Task.FromResult(_repository.FirstOrDefault(sd => sd.SagaId == sagaId));
+        public async Task<ISagaData> ReadAsync(Guid sagaId, Type sagaType)
+            => await Task.FromResult(_repository.FirstOrDefault(s => s.SagaId == sagaId && s.SagaType == sagaType));
 
-        public async Task WriteAsync(ISagaData<TData> sagaData)
+        public async Task WriteAsync(ISagaData sagaData)
         {
-            var sagaDataToUpdate = await ReadAsync(sagaData.SagaId);
+            var sagaDataToUpdate = await ReadAsync(sagaData.SagaId, sagaData.SagaType);
 
             _repository.Remove(sagaDataToUpdate);
             _repository.Add(sagaData);
