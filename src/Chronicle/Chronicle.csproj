@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,7 +11,7 @@
       <PackageProjectUrl>https://github.com/chronicle-stack/Chronicle</PackageProjectUrl>
       <PackageLicenseUrl>https://github.com/chronicle-stack/Chronicle/blob/master/LICENSE</PackageLicenseUrl>
       <PackageIconUrl>https://avatars1.githubusercontent.com/u/42150754?s=200</PackageIconUrl>
-      <VersionPrefix>1.1.0</VersionPrefix>
+      <VersionPrefix>1.2.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
