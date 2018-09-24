@@ -64,7 +64,23 @@ namespace Chronicle.Sagas
 
             saga.Initialize(sagaData.SagaId, sagaData.State, sagaData.Data);
 
-            await action.HandleAsync(message);
+            var isError = false;
+
+            try
+            {
+                await action.HandleAsync(message);
+            }
+            catch
+            {
+                isError = true;
+            }
+            finally
+            {
+                if (saga.State is SagaStates.Rejected || isError)
+                {
+                    await CompensateAsync(saga, sagaType);
+                }
+            }          
 
             var newSagaData = SagaData.Create(id, sagaType, saga.State, saga.Data);
             var sagaLogData = SagaLogData.Create(id, sagaType, message);
@@ -75,14 +91,8 @@ namespace Chronicle.Sagas
                 _sagaLog.SaveAsync(sagaLogData)
             };
 
-            await Task.WhenAll(persistanceTasks);
-
-            if (saga.State is SagaStates.Rejected)
-            {
-                await CompensateAsync(saga, sagaType);
-            }
+            await Task.WhenAll(persistanceTasks).ConfigureAwait(false);
         }
-
 
         private async Task CompensateAsync(ISaga saga, Type sagaType)
         {
@@ -95,9 +105,10 @@ namespace Chronicle.Sagas
                 {
                     var messageType = m.GetType();
 
-                    await (Task) sagaType
-                    .GetMethod(nameof(ISagaAction<object>.CompensateAsync), new[] { messageType })
-                    .Invoke(saga, new[] { m });
+                    await ((Task) sagaType
+                        .GetMethod(nameof(ISagaAction<object>.CompensateAsync), new[] { messageType })
+                        .Invoke(saga, new[] { m }))
+                    .ConfigureAwait(false);
                 });
         }
     }

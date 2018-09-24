@@ -12,13 +12,16 @@ namespace Chronicle
 
         object ISaga.Data => Data;
 
-        public virtual void Initialize(Guid id, SagaStates state, object data)
-            => (Id, State, Data) = (id, state, (TData) data);
+        public virtual void Initialize(Guid id, SagaStates state, TData data)
+            => (Id, State, Data) = (id, state, data);
 
         public virtual void Complete()
             => State = SagaStates.Completed;
 
         public virtual void Reject()
             => State = SagaStates.Rejected;
+
+        void ISaga.Initialize(Guid id, SagaStates state, object data)
+            => Initialize(id, state, (TData)data);
     }
 }
