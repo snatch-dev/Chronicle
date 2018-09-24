@@ -26,6 +26,7 @@ namespace TestApp
         public Task HandleAsync(Message2 message)
         {
             Data.IsMessage2 = true;
+            Console.WriteLine("M2 reached!");
             CompleteSaga();
             return Task.CompletedTask;
         }
@@ -33,6 +34,7 @@ namespace TestApp
         public Task HandleAsync(Message1 message)
         {
             Data.IsMessage1 = true;
+            Console.WriteLine("M1 reached!");
             CompleteSaga();
             return Task.CompletedTask;
         }

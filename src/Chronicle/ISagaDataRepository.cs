@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Chronicle
 {
-    public interface ISagaDataRepository<TData> where TData : class
+    public interface ISagaDataRepository
     {
-        Task<ISagaData<TData>> ReadAsync(Guid sagaId);
-        Task WriteAsync(ISagaData<TData> sagaData);
+        Task<ISagaData> ReadAsync(Guid sagaId, Type sagaType);
+        Task WriteAsync(ISagaData sagaData);
     }
 }

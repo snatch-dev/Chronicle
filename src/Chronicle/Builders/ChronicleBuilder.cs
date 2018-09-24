@@ -14,7 +14,7 @@ namespace Chronicle.Builders
 
         public IChronicleBuilder UseInMemoryPersistence()
         {
-            _services.AddSingleton(typeof(ISagaDataRepository<>), typeof(InMemorySagaDataRepository<>));
+            _services.AddSingleton(typeof(ISagaDataRepository), typeof(InMemorySagaDataRepository));
             _services.AddSingleton(typeof(ISagaLog), typeof(InMememorySagaLog));
             return this;
         }
@@ -28,8 +28,8 @@ namespace Chronicle.Builders
 
         public IChronicleBuilder UseSagaDataRepository(Type repositoryType)
         {
-            Check.Is<ISagaDataRepository<object>>(repositoryType);
-            _services.AddTransient(typeof(ISagaDataRepository<>), repositoryType);
+            Check.Is<ISagaDataRepository>(repositoryType);
+            _services.AddTransient(typeof(ISagaDataRepository), repositoryType);
             return this;
         }
 

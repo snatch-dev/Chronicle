@@ -12,8 +12,8 @@ namespace Chronicle.Persistence
         public InMememorySagaLog()
             => _sagaLog = new List<ISagaLogData>();
 
-        public async Task<IEnumerable<ISagaLogData>> GetAsync(Guid sagaId)
-            => await Task.FromResult(_sagaLog.Where(sld => sld.SagaId == sagaId));
+        public async Task<IEnumerable<ISagaLogData>> GetAsync(Guid sagaId, Type sagaType)
+            => await Task.FromResult(_sagaLog.Where(sld => sld.SagaId == sagaId && sld.SagaType == sagaType));
 
         public async Task SaveAsync(ISagaLogData message)
         {
