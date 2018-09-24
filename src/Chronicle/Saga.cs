@@ -15,6 +15,9 @@ namespace Chronicle
         public virtual void Initialize(Guid id, SagaStates state, TData data)
             => (Id, State, Data) = (id, state, data);
 
+        public virtual Guid ResolveId(object message, ISagaContext context)
+            => context.CorrelationId;
+
         public virtual void Complete()
             => State = SagaStates.Completed;
 

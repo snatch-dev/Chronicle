@@ -23,15 +23,15 @@ namespace TestApp
     public class SampleSaga : Saga<SagaData>, ISagaStartAction<Message1>, ISagaAction<Message2>
     {
 
-        public Task HandleAsync(Message2 message)
+        public Task HandleAsync(Message2 message, ISagaContext context)
         {
             Data.IsMessage2 = true;
             Console.WriteLine("M2 reached!");
-            CompleteSaga();
+            Reject();
             return Task.CompletedTask;
         }
 
-        public Task HandleAsync(Message1 message)
+        public Task HandleAsync(Message1 message, ISagaContext context)
         {
             Data.IsMessage1 = true;
             Console.WriteLine("M1 reached!");
@@ -39,14 +39,14 @@ namespace TestApp
             return Task.CompletedTask;
         }
 
-        public Task CompensateAsync(Message1 message)
+        public Task CompensateAsync(Message1 message, ISagaContext context)
         {
             Console.BackgroundColor = ConsoleColor.Red;
             Console.WriteLine($"COMPANSATE M1 with message: {message.Text}");
             return Task.CompletedTask;
         }
 
-        public Task CompensateAsync(Message2 message)
+        public Task CompensateAsync(Message2 message, ISagaContext context)
         {
             Console.BackgroundColor = ConsoleColor.Blue;
             Console.WriteLine($"COMPANSATE M2 with message: {message.Text}");

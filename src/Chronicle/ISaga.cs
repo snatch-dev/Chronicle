@@ -10,6 +10,7 @@ namespace Chronicle
         void Reject();
         object Data { get; }
         void Initialize(Guid id, SagaStates state, object data);
+        Guid ResolveId(object message, ISagaContext context);
     }
 
     public interface ISaga<TData> : ISaga where TData : class

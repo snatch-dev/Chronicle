@@ -4,7 +4,7 @@ namespace Chronicle
 {
     public interface ISagaAction<in TMessage>
     {
-        Task HandleAsync(TMessage message);
-        Task CompensateAsync(TMessage message);
+        Task HandleAsync(TMessage message, ISagaContext context);
+        Task CompensateAsync(TMessage message, ISagaContext context);
     }
 }
