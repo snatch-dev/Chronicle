@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <AssemblyName>Chronicle.Tests</AssemblyName>
+
+    <RootNamespace>Chronicle.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
