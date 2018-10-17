@@ -32,7 +32,7 @@ Task("run-xunit-tests")
             Configuration = configuration
         };
     
-        DotNetCoreTest("../src/Chronicle.Test/Chronicle.Test.csproj", settings);
+        DotNetCoreTest("../src/Chronicle.Tests/Chronicle.Tests.csproj", settings);
     });	
 
 Task("Default")
