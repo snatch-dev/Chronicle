@@ -83,11 +83,6 @@ namespace Chronicle.Managers
                 isError = true;
             }
 
-            if (saga.State is SagaStates.Rejected || isError)
-            {
-                await CompensateAsync(saga, sagaType, context);
-            }
-
             var newSagaData = SagaData.Create(id, sagaType, saga.State, saga.Data);
             var sagaLogData = SagaLogData.Create(id, sagaType, message);
 
@@ -98,6 +93,11 @@ namespace Chronicle.Managers
             };
 
             await Task.WhenAll(persistanceTasks).ConfigureAwait(false);
+
+            if (saga.State is SagaStates.Rejected || isError)
+            {
+                await CompensateAsync(saga, sagaType, context);
+            }
         }
 
         private async Task CompensateAsync(ISaga saga, Type sagaType, ISagaContext context)

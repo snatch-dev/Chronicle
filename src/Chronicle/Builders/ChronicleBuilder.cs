@@ -21,7 +21,7 @@ namespace Chronicle.Builders
 
         public IChronicleBuilder UseSagaLog(Type sagaLogType)
         {
-            Check.Is<ISagaLog>(sagaLogType,ChronicleBuilderErrorMessages.InvalidSagaLogType);
+            Check.Is<ISagaLog>(sagaLogType, ChronicleBuilderErrorMessages.InvalidSagaLogType);
             _services.AddTransient(typeof(ISagaLog), sagaLogType);
             return this;
         }
