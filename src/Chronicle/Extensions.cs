@@ -45,7 +45,7 @@ namespace Chronicle
                     .WithTransientLifetime();
             });
 
-        public static IEnumerable<Type> GetInterfaces(this Type type, bool includeInherited)
+        private static IEnumerable<Type> GetInterfaces(this Type type, bool includeInherited)
         {
             if (includeInherited || type.BaseType == null)
             {
