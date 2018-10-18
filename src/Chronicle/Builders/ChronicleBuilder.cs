@@ -21,14 +21,14 @@ namespace Chronicle.Builders
 
         public IChronicleBuilder UseSagaLog(Type sagaLogType)
         {
-            Check.Is<ISagaLog>(sagaLogType);
+            Check.Is<ISagaLog>(sagaLogType,ChronicleBuilderErrorMessages.InvalidSagaLogType);
             _services.AddTransient(typeof(ISagaLog), sagaLogType);
             return this;
         }
 
         public IChronicleBuilder UseSagaDataRepository(Type repositoryType)
         {
-            Check.Is<ISagaDataRepository>(repositoryType);
+            Check.Is<ISagaDataRepository>(repositoryType, ChronicleBuilderErrorMessages.InvalidSagaDataRepositoryType);
             _services.AddTransient(typeof(ISagaDataRepository), repositoryType);
             return this;
         }
