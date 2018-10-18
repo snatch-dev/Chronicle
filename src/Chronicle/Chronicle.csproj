@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
       <Title>Chronicle</Title>
       <AssemblyName>Chronicle</AssemblyName>
-      <PackageId>Chronicle</PackageId>
+      <PackageId>ChronicleSaga</PackageId>
       <PackageTags>chronicle;saga</PackageTags>
       <Description>Implementation of saga pattern for .NET Core</Description>
       <Authors>Dariusz Pawlukiewicz, Piotr Gankiewicz</Authors>
