@@ -12,9 +12,9 @@
       <PackageLicenseUrl>https://github.com/chronicle-stack/Chronicle/blob/master/LICENSE</PackageLicenseUrl>
       <PackageIconUrl>https://avatars1.githubusercontent.com/u/42150754?s=200</PackageIconUrl>
       <VersionPrefix>1.3.0</VersionPrefix>
-      <Version>1.4.1</Version>
-      <AssemblyVersion>1.4.1.0</AssemblyVersion>
-      <FileVersion>1.4.1.0</FileVersion>
+      <Version>1.4.2</Version>
+      <AssemblyVersion>1.4.2.0</AssemblyVersion>
+      <FileVersion>1.4.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
