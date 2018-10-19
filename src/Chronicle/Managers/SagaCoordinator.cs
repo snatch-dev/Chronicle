@@ -43,7 +43,7 @@ namespace Chronicle.Managers
                     .GetGenericArguments()
                     .First();
 
-                sagaTasks.Add(ProcessAsync(id, sagaType, sagaDataType, message, action));
+                sagaTasks.Add(ProcessAsync(id, sagaType, sagaDataType, message, action, context));
             }
 
             await Task.WhenAll(sagaTasks);
