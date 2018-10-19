@@ -23,10 +23,10 @@ namespace Chronicle.Managers
         }
 
         public async Task ProcessAsync<TMessage>(TMessage message, ISagaContext context = null) where TMessage : class
-            => await ProcessAsync(null, message);
+            => await ProcessAsync(null, message, context);
 
         public async Task ProcessAsync<TMessage>(Guid id, TMessage message, ISagaContext context = null) where TMessage : class
-            => await ProcessAsync((Guid?) id, message);
+            => await ProcessAsync((Guid?) id, message, context);
 
         private async Task ProcessAsync<TMessage>(Guid? id, TMessage message, ISagaContext context = null) where TMessage : class
         {
