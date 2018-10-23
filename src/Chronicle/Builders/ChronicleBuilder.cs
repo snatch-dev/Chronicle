@@ -7,29 +7,29 @@ namespace Chronicle.Builders
 {
     internal class ChronicleBuilder : IChronicleBuilder
     {
-        private readonly IServiceCollection _services;
+        public IServiceCollection Services { get; }
 
         public ChronicleBuilder(IServiceCollection services)
-            => _services = services;
+            => Services = services;
 
         public IChronicleBuilder UseInMemoryPersistence()
         {
-            _services.AddSingleton(typeof(ISagaDataRepository), typeof(InMemorySagaDataRepository));
-            _services.AddSingleton(typeof(ISagaLog), typeof(InMememorySagaLog));
+            Services.AddSingleton(typeof(ISagaDataRepository), typeof(InMemorySagaDataRepository));
+            Services.AddSingleton(typeof(ISagaLog), typeof(InMememorySagaLog));
             return this;
         }
 
         public IChronicleBuilder UseSagaLog(Type sagaLogType)
         {
             Check.Is<ISagaLog>(sagaLogType, ChronicleBuilderErrorMessages.InvalidSagaLogType);
-            _services.AddTransient(typeof(ISagaLog), sagaLogType);
+            Services.AddTransient(typeof(ISagaLog), sagaLogType);
             return this;
         }
 
         public IChronicleBuilder UseSagaDataRepository(Type repositoryType)
         {
             Check.Is<ISagaDataRepository>(repositoryType, ChronicleBuilderErrorMessages.InvalidSagaDataRepositoryType);
-            _services.AddTransient(typeof(ISagaDataRepository), repositoryType);
+            Services.AddTransient(typeof(ISagaDataRepository), repositoryType);
             return this;
         }
 
