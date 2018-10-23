@@ -19,12 +19,18 @@ namespace Chronicle.Builders
             return this;
         }
 
+        public IChronicleBuilder UseSagaLog<TSagaLog>() where TSagaLog : ISagaLog
+            => UseSagaLog(typeof(TSagaLog));
+
         public IChronicleBuilder UseSagaLog(Type sagaLogType)
         {
             Check.Is<ISagaLog>(sagaLogType, ChronicleBuilderErrorMessages.InvalidSagaLogType);
             Services.AddTransient(typeof(ISagaLog), sagaLogType);
             return this;
         }
+
+        public IChronicleBuilder UseSagaDataRepository<TRepository>() where TRepository : ISagaDataRepository
+            => UseSagaDataRepository(typeof(TRepository));
 
         public IChronicleBuilder UseSagaDataRepository(Type repositoryType)
         {
