@@ -38,7 +38,7 @@ namespace Chronicle.Tests.Managers
         class CustomSagaData { }
 
         class CustomSaga :
-            Saga<CustomSaga>,
+            Saga<CustomSagaData>,
             ISagaStartAction<Message1>
         {
             public Task CompensateAsync(Message1 message, ISagaContext context)
@@ -51,7 +51,6 @@ namespace Chronicle.Tests.Managers
                 throw new NotImplementedException();
             }
         }
-
 
         public SagaSeekerTests()
         {

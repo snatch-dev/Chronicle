@@ -1,7 +1,7 @@
 using System;
 
 namespace Chronicle
-{
+{  
     public abstract class Saga<TData> : ISaga<TData> where TData : class, new()
     {
         public Guid Id { get; private set; }
@@ -26,5 +26,9 @@ namespace Chronicle
 
         void ISaga.Initialize(Guid id, SagaStates state, object data)
             => Initialize(id, state, (TData)data);
+    }
+
+    public abstract class Saga : Saga<EmptySagaData>
+    {
     }
 }
