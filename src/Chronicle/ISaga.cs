@@ -8,14 +8,13 @@ namespace Chronicle
         SagaStates State { get; }
         void Complete();
         void Reject();
-        object Data { get; }
-        void Initialize(Guid id, SagaStates state, object data);
+        void Initialize(Guid id, SagaStates state);
         Guid ResolveId(object message, ISagaContext context);
     }
 
     public interface ISaga<TData> : ISaga where TData : class
     {
-        new TData Data { get; }
+        TData Data { get; }
         void Initialize(Guid id, SagaStates state, TData data);
     }
 }
