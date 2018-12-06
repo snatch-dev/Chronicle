@@ -133,7 +133,7 @@ namespace Chronicle.Managers
                 .GetProperty(nameof(ISaga<object>.Data))
                ?.GetValue(saga);
 
-            var newSagaData = SagaData.Create(id, sagaType, saga.State, updatedSagaData);
+            var newSagaData = createSagaData(id, sagaType, SagaStates.Pending, updatedSagaData);
             var sagaLogData = SagaLogData.Create(id, sagaType, message);
 
             var persistenceTasks = new Task[2]
