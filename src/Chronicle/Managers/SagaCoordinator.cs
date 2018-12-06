@@ -40,9 +40,9 @@ namespace Chronicle.Managers
                 var sagaDataType = action
                     .GetType()
                     .GetInterfaces()
-                    .First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISaga<>))
+                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISaga<>))
                    ?.GetGenericArguments()
-                    .First();
+                    .FirstOrDefault();
 
                 sagaTasks.Add(sagaDataType is null
                     ? ProcessAsync(id, sagaType, message, action, context)

@@ -38,7 +38,7 @@ namespace Chronicle
 
                 scan
                     .FromAssemblies(assembly)
-                    .AddClasses(classes => classes.AssignableTo(typeof(ISaga<>)))
+                    .AddClasses(classes => classes.AssignableTo(typeof(ISaga)))
                     .As(t => t
                         .GetTypeInfo()
                         .GetInterfaces(includeInherited: false))
@@ -50,11 +50,11 @@ namespace Chronicle
             if (includeInherited || type.BaseType == null)
             {
                 return type.GetInterfaces();
-            }                
+            }
             else
             {
                 return type.GetInterfaces().Except(type.BaseType.GetInterfaces());
-            }                
+            }
         }
     }
 }
