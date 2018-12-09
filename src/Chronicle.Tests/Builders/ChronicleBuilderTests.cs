@@ -29,7 +29,7 @@ namespace Chronicle.Tests.Builders
                 .Add(Arg.Is<ServiceDescriptor>(sd =>
                     sd.Lifetime == ServiceLifetime.Singleton &&
                     sd.ServiceType == typeof(ISagaLog) &&
-                    sd.ImplementationType == typeof(InMememorySagaLog)));
+                    sd.ImplementationType == typeof(InMemorySagaLog)));
         }
 
         [Fact]

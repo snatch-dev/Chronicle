@@ -6,11 +6,12 @@ namespace Chronicle.Errors
     {
         internal static void Is<TExpected>(Type type, string message = null)
         {
-            if (!(typeof(TExpected).IsAssignableFrom(type)))
+            if (typeof(TExpected).IsAssignableFrom(type))
             {
-                message = message ?? CheckErrorMessages.InvalidArgumentType;
-                throw new ChronicleException(message);
+                return;
             }
+            message = message ?? CheckErrorMessages.InvalidArgumentType;
+            throw new ChronicleException(message);
         }
 
         internal static void IsNull<TData>(TData data, string message = null) where TData : class
@@ -22,7 +23,7 @@ namespace Chronicle.Errors
             }
         }
 
-        public static class CheckErrorMessages
+        private static class CheckErrorMessages
         {
             public static string InvalidArgumentType = "Invalid argument type";
             public static string ArgumentNull = "Argument null";

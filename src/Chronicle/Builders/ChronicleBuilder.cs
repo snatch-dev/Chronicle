@@ -15,7 +15,7 @@ namespace Chronicle.Builders
         public IChronicleBuilder UseInMemoryPersistence()
         {
             Services.AddSingleton(typeof(ISagaDataRepository), typeof(InMemorySagaDataRepository));
-            Services.AddSingleton(typeof(ISagaLog), typeof(InMememorySagaLog));
+            Services.AddSingleton(typeof(ISagaLog), typeof(InMemorySagaLog));
             return this;
         }
 

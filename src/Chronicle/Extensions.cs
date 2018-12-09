@@ -51,10 +51,8 @@ namespace Chronicle
             {
                 return type.GetInterfaces();
             }
-            else
-            {
-                return type.GetInterfaces().Except(type.BaseType.GetInterfaces());
-            }
+
+            return type.GetInterfaces().Except(type.BaseType.GetInterfaces());
         }
     }
 }

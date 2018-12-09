@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace Chronicle.Persistence
 {
-    internal class InMememorySagaLog : ISagaLog
+    internal class InMemorySagaLog : ISagaLog
     {
         private readonly List<ISagaLogData> _sagaLog;
 
-        public InMememorySagaLog()
+        public InMemorySagaLog()
             => _sagaLog = new List<ISagaLogData>();
 
         public async Task<IEnumerable<ISagaLogData>> GetAsync(Guid sagaId, Type sagaType)
