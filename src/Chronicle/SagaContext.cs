@@ -1,8 +1,8 @@
 using System;
 
-namespace Chronicle.Persistence
+namespace Chronicle
 {
-    internal sealed class SagaContext : ISagaContext
+    public class SagaContext : ISagaContext
     {
         public Guid CorrelationId { get; }
 
@@ -12,7 +12,7 @@ namespace Chronicle.Persistence
             => (CorrelationId, Originator) = (correlationId, originator);
 
         public static ISagaContext Empty
-            => new SagaContext(Guid.Empty, string.Empty);
+            => new SagaContext(Guid.NewGuid(), string.Empty);
 
         public static ISagaContext Create(Guid correlationId, string originator)
             => new SagaContext(correlationId, originator);

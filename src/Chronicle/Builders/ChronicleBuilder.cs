@@ -14,35 +14,21 @@ namespace Chronicle.Builders
 
         public IChronicleBuilder UseInMemoryPersistence()
         {
-            Services.AddSingleton(typeof(ISagaDataRepository), typeof(InMemorySagaDataRepository));
-            Services.AddSingleton(typeof(ISagaLog), typeof(InMememorySagaLog));
+            Services.AddSingleton(typeof(ISagaStateRepository), typeof(InMemorySagaStateRepository));
+            Services.AddSingleton(typeof(ISagaLog), typeof(InMemorySagaLog));
             return this;
         }
 
         public IChronicleBuilder UseSagaLog<TSagaLog>() where TSagaLog : ISagaLog
-            => UseSagaLog(typeof(TSagaLog));
-
-        public IChronicleBuilder UseSagaLog(Type sagaLogType)
         {
-            Check.Is<ISagaLog>(sagaLogType, ChronicleBuilderErrorMessages.InvalidSagaLogType);
-            Services.AddTransient(typeof(ISagaLog), sagaLogType);
+            Services.AddTransient(typeof(ISagaLog), typeof(TSagaLog));
             return this;
         }
 
-        public IChronicleBuilder UseSagaDataRepository<TRepository>() where TRepository : ISagaDataRepository
-            => UseSagaDataRepository(typeof(TRepository));
-
-        public IChronicleBuilder UseSagaDataRepository(Type repositoryType)
+        public IChronicleBuilder UseSagaDataRepository<TRepository>() where TRepository : ISagaStateRepository
         {
-            Check.Is<ISagaDataRepository>(repositoryType, ChronicleBuilderErrorMessages.InvalidSagaDataRepositoryType);
-            Services.AddTransient(typeof(ISagaDataRepository), repositoryType);
+            Services.AddTransient(typeof(ISagaStateRepository), typeof(TRepository));
             return this;
-        }
-
-        private static class ChronicleBuilderErrorMessages
-        {
-            public static string InvalidSagaLogType => "Given type does not derive from ISagaLog interface";
-            public static string InvalidSagaDataRepositoryType => "Given type does not derive from ISagaDataRepository interface";
         }
     }
 }
