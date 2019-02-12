@@ -23,32 +23,34 @@ namespace Chronicle.Managers
             _seeker = seeker;
         }
 
-        public async Task ProcessAsync<TMessage>(TMessage message, ISagaContext context = null) where TMessage : class
-            => await ProcessAsync(null, message, context);
+        public Task ProcessAsync<TMessage>(TMessage message, ISagaContext context = null) where TMessage : class
+            => ProcessAsync(message: message, onCompleted: null, onRejected: null, context: context); 
 
-        public async Task ProcessAsync<TMessage>(Guid id, TMessage message, ISagaContext context = null) where TMessage : class
-            => await ProcessAsync((Guid?) id, message, context);
-
-        private async Task ProcessAsync<TMessage>(Guid? id, TMessage message, ISagaContext context = null) where TMessage : class
+        public async Task ProcessAsync<TMessage>(TMessage message, Func<TMessage,ISagaContext,Task> onCompleted = null, 
+            Func<TMessage, ISagaContext, Task> onRejected = null, ISagaContext context = null) where TMessage : class
         {
             var actions = _seeker.Seek<TMessage>().ToList();
             var sagaTasks = new List<Task>();
 
+            Task EmptyHook(TMessage m, ISagaContext ctx) => Task.CompletedTask;
+            onCompleted = onCompleted ?? EmptyHook;
+            onRejected = onRejected ?? EmptyHook;
+
             foreach (var action in actions)
             {
-                sagaTasks.Add(ProcessAsync(id, message, action, context));
+                sagaTasks.Add(ProcessAsync(message, action, onCompleted, onRejected, context));
             }
 
             await Task.WhenAll(sagaTasks);
         }
 
-        private async Task ProcessAsync<TMessage>(
-            Guid? nid, TMessage message, ISagaAction<TMessage> action, ISagaContext context = null) where TMessage : class
+        private async Task ProcessAsync<TMessage>(TMessage message, ISagaAction<TMessage> action, Func<TMessage,ISagaContext,Task> onCompleted, 
+            Func<TMessage, ISagaContext, Task> onRejected,  ISagaContext context = null) where TMessage : class
         {
             context = context ?? SagaContext.Empty;
             var saga = (ISaga)action;
             var sagaType = saga.GetType();
-            var id = nid ?? saga.ResolveId(message, context);
+            var id = saga.ResolveId(message, context);
             var dataType = saga.GetSagaDataType();
             var state = await _repository.ReadAsync(id, sagaType).ConfigureAwait(false);
 
@@ -68,36 +70,25 @@ namespace Chronicle.Managers
 
             InitializeSaga(saga, id, state);
 
-            var isError = false;
-
             try
             {
                 await action.HandleAsync(message, context);
             }
             catch
             {
-                isError = true;
+                saga.Reject();
             }
 
-            var updatedSagaData = saga
-                .GetType()
-                .GetProperty(nameof(ISaga<object>.Data))
-               ?.GetValue(saga);
+            await UpdateSagaAsync(message, saga, state);
 
-            state.Update(saga.State, updatedSagaData);
-            var logData = SagaLogData.Create(id, sagaType, message);
-
-            var persistenceTasks = new Task[2]
+            if (saga.State is SagaStates.Rejected)
             {
-                _repository.WriteAsync(state),
-                _log.WriteAsync(logData)
-            };
-
-            await Task.WhenAll(persistenceTasks).ConfigureAwait(false);
-
-            if (saga.State is SagaStates.Rejected || isError)
-            {
+                await onRejected(message, context);
                 await CompensateAsync(saga, sagaType, context);
+            }
+            else if (saga.State is SagaStates.Completed)
+            {
+                await onCompleted(message, context);
             }
         }
 
@@ -115,8 +106,29 @@ namespace Chronicle.Managers
             }
             else
             {
-                saga.InvokeGeneric(nameof(ISaga<object>.Initialize), id, state, state.Data);
+                saga.InvokeGeneric(nameof(ISaga<object>.Initialize), id, state.State, state.Data);
             }
+        }
+        
+        private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state)
+            where TMessage : class
+        {
+            var sagaType = saga.GetType();
+            
+            var updatedSagaData = sagaType
+                .GetProperty(nameof(ISaga<object>.Data))
+               ?.GetValue(saga);
+
+            state.Update(saga.State, updatedSagaData);
+            var logData = SagaLogData.Create(saga.Id, sagaType, message);
+
+            var persistenceTasks = new Task[2]
+            {
+                _repository.WriteAsync(state),
+                _log.WriteAsync(logData)
+            };
+            
+            await Task.WhenAll(persistenceTasks).ConfigureAwait(false);
         }
 
         private async Task CompensateAsync(ISaga saga, Type sagaType, ISagaContext context)
@@ -128,7 +140,7 @@ namespace Chronicle.Managers
                 .ToList()
                 .ForEach(async message =>
                 {
-                    ((Task)saga.InvokeGeneric(nameof(ISagaAction<object>.CompensateAsync), message, context))
+                    await ((Task)saga.InvokeGeneric(nameof(ISagaAction<object>.CompensateAsync), message, context))
                         .ConfigureAwait(false);
                 });
         }

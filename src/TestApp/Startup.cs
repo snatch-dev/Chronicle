@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks.Sources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,17 +23,16 @@ namespace TestApp
         {
             var coordinator = app.ApplicationServices.GetService<ISagaCoordinator>();
 
-            var id = Guid.NewGuid();
+            var context = SagaContext.Empty;
 
-            coordinator.ProcessAsync(id, new Message1
-            {
-                Text = "This message will be used one day..."
-            });
+            coordinator.ProcessAsync(new Message1 { Text = "This message will be used one day..." }, context);
 
-            coordinator.ProcessAsync(id, new Message2
-            {
-                Text = "But this one will be printed first! (We compensate from the end to beggining of the log)"
-            });
+            coordinator.ProcessAsync( new Message2 { Text = "But this one will be printed first! (We compensate from the end to beggining of the log)" }, 
+                onCompleted: async (m, ctx) =>
+                {
+                    Console.WriteLine("My work is done");
+                },
+                context: context);
 
             Console.ReadLine();
         }

@@ -27,7 +27,7 @@ namespace TestApp
         {
             Data.IsMessage2 = true;
             Console.WriteLine("M2 reached!");
-            Reject();
+            CompleteSaga();
             return Task.CompletedTask;
         }
 
