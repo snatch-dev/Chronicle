@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Chronicle
 {
@@ -17,8 +18,20 @@ namespace Chronicle
         public virtual void Complete()
             => State = SagaStates.Completed;
 
+        public virtual Task CompleteAsync()
+        {
+            Complete();
+            return Task.CompletedTask;
+        }
+
         public virtual void Reject()
             => State = SagaStates.Rejected;
+        
+        public virtual Task RejectAsync()
+        {
+            Reject();
+            return Task.CompletedTask;
+        }
     }
 
     public abstract class Saga<TData> : Saga, ISaga<TData> where TData : class, new()

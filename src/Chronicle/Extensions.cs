@@ -47,7 +47,7 @@ namespace Chronicle
 
         private static IEnumerable<Type> GetInterfaces(this Type type, bool includeInherited)
         {
-            if (includeInherited || type.BaseType == null)
+            if (includeInherited || type.BaseType is null)
             {
                 return type.GetInterfaces();
             }

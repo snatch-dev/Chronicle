@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace Chronicle
 {
@@ -7,7 +8,9 @@ namespace Chronicle
         Guid Id { get; }
         SagaStates State { get; }
         void Complete();
+        Task CompleteAsync();
         void Reject();
+        Task RejectAsync();
         void Initialize(Guid id, SagaStates state);
         Guid ResolveId(object message, ISagaContext context);
     }
@@ -15,6 +18,6 @@ namespace Chronicle
     public interface ISaga<TData> : ISaga where TData : class
     {
         TData Data { get; }
-        void Initialize(Guid id, SagaStates state, TData data);
+        void Initialize(Guid id, SagaStates states, TData data);
     }
 }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chronicle.Managers
@@ -13,16 +12,6 @@ namespace Chronicle.Managers
             => _serviceProvider = serviceProvider;
 
         public IEnumerable<ISagaAction<TMessage>> Seek<TMessage>()
-        {
-            var actions = _serviceProvider.GetService<IEnumerable<ISagaAction<TMessage>>>();
-            var startActions = _serviceProvider.GetService<IEnumerable<ISagaStartAction<TMessage>>>();
-
-            var result = actions
-                .Concat(startActions)
-                .GroupBy(a => a.GetType())
-                .Select(g => g.First());
-
-            return result;
-        }
+            => _serviceProvider.GetService<IEnumerable<ISagaAction<TMessage>>>();
     }
 }

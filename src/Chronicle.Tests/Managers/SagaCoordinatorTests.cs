@@ -29,7 +29,7 @@ namespace Chronicle.Tests.Managers
         #region ARRANGE
         
         private readonly ISagaLog _sagaLog;
-        private readonly ISagaDataRepository _repository;
+        private readonly ISagaStateRepository _repository;
         private readonly ISagaSeeker _sagaSeeker;
         private readonly CustomSaga _saga;
         private readonly ISagaCoordinator _sagaCoordinator;
@@ -51,7 +51,7 @@ namespace Chronicle.Tests.Managers
         public SagaCoordinatorTests()
         {
             _sagaLog = Substitute.For<ISagaLog>();
-            _repository = Substitute.For<ISagaDataRepository>();
+            _repository = Substitute.For<ISagaStateRepository>();
             _sagaSeeker = Substitute.For<ISagaSeeker>();
             _saga = Substitute.For<CustomSaga>();
             _sagaCoordinator = new SagaCoordinator(_sagaLog, _repository, _sagaSeeker);

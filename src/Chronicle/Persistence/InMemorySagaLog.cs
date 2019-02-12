@@ -12,10 +12,10 @@ namespace Chronicle.Persistence
         public InMemorySagaLog()
             => _sagaLog = new List<ISagaLogData>();
 
-        public async Task<IEnumerable<ISagaLogData>> GetAsync(Guid sagaId, Type sagaType)
-            => await Task.FromResult(_sagaLog.Where(sld => sld.SagaId == sagaId && sld.SagaType == sagaType));
+        public async Task<IEnumerable<ISagaLogData>> ReadAsync(Guid id, Type type)
+            => await Task.FromResult(_sagaLog.Where(sld => sld.Id == id && sld.Type == type));
 
-        public async Task SaveAsync(ISagaLogData message)
+        public async Task WriteAsync(ISagaLogData message)
         {
             _sagaLog.Add(message);
             await Task.CompletedTask;

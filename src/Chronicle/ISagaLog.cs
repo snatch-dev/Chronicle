@@ -6,7 +6,7 @@ namespace Chronicle
 {
     public interface ISagaLog
     {
-        Task SaveAsync(ISagaLogData message);
-        Task<IEnumerable<ISagaLogData>> GetAsync(Guid sagaId, Type sagaType);
+        Task<IEnumerable<ISagaLogData>> ReadAsync(Guid id, Type type);
+        Task WriteAsync(ISagaLogData message);
     }
 }
