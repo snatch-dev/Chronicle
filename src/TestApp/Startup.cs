@@ -23,7 +23,13 @@ namespace TestApp
         {
             var coordinator = app.ApplicationServices.GetService<ISagaCoordinator>();
 
-            var context = SagaContext.Empty;
+            var context = SagaContext
+                .Builder
+                .WithCorrelationId(Guid.NewGuid())
+                .WithOriginator("Test")
+                .WithMetadata("key", "lulz")
+                .WithMetadata("key", "lulz")
+                .Build();
 
             coordinator.ProcessAsync(new Message1 { Text = "This message will be used one day..." }, context);
 

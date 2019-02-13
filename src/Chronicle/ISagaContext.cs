@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace Chronicle
 {
@@ -6,5 +7,8 @@ namespace Chronicle
     {
         Guid CorrelationId { get; }
         string Originator { get; }
+        IReadOnlyCollection<ISagaContextMetadata> Metadata { get; }
+        ISagaContextMetadata GetMetadata(string key);
+        bool TryGetMetadata(string key, out ISagaContextMetadata metadata);
     }
 }
