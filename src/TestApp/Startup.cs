@@ -24,10 +24,16 @@ namespace TestApp
             var coordinator = app.ApplicationServices.GetService<ISagaCoordinator>();
 
             var context = SagaContext
-                .Builder
+                .Create()
                 .WithCorrelationId(Guid.NewGuid())
                 .WithOriginator("Test")
                 .WithMetadata("key", "lulz")
+                .Build();
+            
+            var context2 = SagaContext
+                .Create()
+                .WithCorrelationId(Guid.NewGuid())
+                .WithOriginator("Test")
                 .WithMetadata("key", "lulz")
                 .Build();
 

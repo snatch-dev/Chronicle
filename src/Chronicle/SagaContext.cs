@@ -12,8 +12,6 @@ namespace Chronicle
         public string Originator { get; }
         public IReadOnlyCollection<ISagaContextMetadata> Metadata { get; }
 
-        public static readonly ISagaContextBuilder Builder = new SagaContextBuilder();
-
         private SagaContext(Guid correlationId, string originator, IEnumerable<ISagaContextMetadata> metadata)
         {
             CorrelationId = correlationId;
@@ -34,6 +32,9 @@ namespace Chronicle
 
         public static ISagaContext Create(Guid correlationId, string originator, IEnumerable<ISagaContextMetadata> metadata)
             => new SagaContext(correlationId, originator, metadata);
+        
+        public static ISagaContextBuilder Create()
+            => new SagaContextBuilder();
         
         public ISagaContextMetadata GetMetadata(string key)
             => Metadata.Single(m => m.Key == key);
