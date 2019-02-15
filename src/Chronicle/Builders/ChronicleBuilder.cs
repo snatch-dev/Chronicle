@@ -25,7 +25,7 @@ namespace Chronicle.Builders
             return this;
         }
 
-        public IChronicleBuilder UseSagaDataRepository<TRepository>() where TRepository : ISagaStateRepository
+        public IChronicleBuilder UseSagaStateRepository<TRepository>() where TRepository : ISagaStateRepository
         {
             Services.AddTransient(typeof(ISagaStateRepository), typeof(TRepository));
             return this;

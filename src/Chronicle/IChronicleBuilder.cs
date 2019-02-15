@@ -8,6 +8,6 @@ namespace Chronicle
         IServiceCollection Services { get; }
         IChronicleBuilder UseInMemoryPersistence();
         IChronicleBuilder UseSagaLog<TSagaLog>() where TSagaLog : ISagaLog;
-        IChronicleBuilder UseSagaDataRepository<TRepository>() where TRepository : ISagaStateRepository;
+        IChronicleBuilder UseSagaStateRepository<TRepository>() where TRepository : ISagaStateRepository;
     }
 }
