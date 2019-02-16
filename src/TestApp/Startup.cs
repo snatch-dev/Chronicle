@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Threading.Tasks.Sources;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -40,9 +41,10 @@ namespace TestApp
             coordinator.ProcessAsync(new Message1 { Text = "This message will be used one day..." }, context);
 
             coordinator.ProcessAsync( new Message2 { Text = "But this one will be printed first! (We compensate from the end to beggining of the log)" }, 
-                onCompleted: async (m, ctx) =>
+                onCompleted: (m, ctx) =>
                 {
                     Console.WriteLine("My work is done");
+                    return Task.CompletedTask;
                 },
                 context: context);
 
