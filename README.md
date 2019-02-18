@@ -1,5 +1,6 @@
 
 ![Chronicle](https://avatars1.githubusercontent.com/u/42150754?s=200&v=4)
+
 Chronicle is simple **process manager/saga pattern** implementation for .NET Core that helps you manage long-living and disitrbuted transactions.
 
 |   | master  | develop  |
