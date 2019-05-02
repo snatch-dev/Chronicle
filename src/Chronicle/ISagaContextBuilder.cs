@@ -2,11 +2,12 @@ using System;
 
 namespace Chronicle
 {
-    public interface ISagaContextBuilder
-    {
-        ISagaContextBuilder WithCorrelationId(Guid correlationId);
-        ISagaContextBuilder WithOriginator(string originator);
-        ISagaContextBuilder WithMetadata(string key, object value);
-        ISagaContext Build();
-    }
+  public interface ISagaContextBuilder
+  {
+    ISagaContextBuilder WithSagaId(SagaId sagaId);
+    ISagaContextBuilder WithOriginator(string originator);
+    ISagaContextBuilder WithMetadata(string key, object value);
+    ISagaContextBuilder WithMetadata(ISagaContextMetadata sagaContextMetadata);
+    ISagaContext Build();
+  }
 }
