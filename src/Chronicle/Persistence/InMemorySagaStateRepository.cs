@@ -5,24 +5,23 @@ using System.Threading.Tasks;
 
 namespace Chronicle.Persistence
 {
-  internal class InMemorySagaStateRepository : ISagaStateRepository
-  {
-    private readonly List<ISagaState> _repository;
-
-    public InMemorySagaStateRepository()
-        => _repository = new List<ISagaState>();
-
-    public async Task<ISagaState> ReadAsync(SagaId id, Type type)
-        => await Task.FromResult(_repository.FirstOrDefault(s => s.Id == id && s.Type == type));
-
-    public async Task WriteAsync(ISagaState state)
+    internal class InMemorySagaStateRepository : ISagaStateRepository
     {
-      var sagaDataToUpdate = await ReadAsync(state.Id, state.Type);
+        private readonly List<ISagaState> _repository;
 
-      _repository.Remove(sagaDataToUpdate);
-      _repository.Add(state);
+        public InMemorySagaStateRepository() => _repository = new List<ISagaState>();
 
-      await Task.CompletedTask;
+        public async Task<ISagaState> ReadAsync(SagaId id, Type type) =>
+            await Task.FromResult(_repository.FirstOrDefault(s => s.Id == id && s.Type == type));
+
+        public async Task WriteAsync(ISagaState state)
+        {
+            var sagaDataToUpdate = await ReadAsync(state.Id, state.Type);
+
+            _repository.Remove(sagaDataToUpdate);
+            _repository.Add(state);
+
+            await Task.CompletedTask;
+        }
     }
-  }
 }

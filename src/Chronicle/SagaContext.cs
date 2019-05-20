@@ -4,46 +4,44 @@ using Chronicle.Builders;
 
 namespace Chronicle
 {
-  public sealed class SagaContext : ISagaContext
-  {
-    public SagaId SagaId { get; }
-
-    public string Originator { get; }
-    public IReadOnlyCollection<ISagaContextMetadata> Metadata { get; }
-
-    private SagaContext(SagaId sagaId, string originator, IEnumerable<ISagaContextMetadata> metadata)
+    public sealed class SagaContext : ISagaContext
     {
-      SagaId = sagaId;
-      Originator = originator;
+        public SagaId SagaId { get; }
 
-      var areMetadataKeysUnique = metadata.GroupBy(m => m.Key).All(g => g.Count() == 1);
+        public string Originator { get; }
+        public IReadOnlyCollection<ISagaContextMetadata> Metadata { get; }
 
-      if (!areMetadataKeysUnique)
-      {
-        throw new ChronicleException("Metadata keys are not unique");
-      }
+        private SagaContext(SagaId sagaId, string originator, IEnumerable<ISagaContextMetadata> metadata)
+        {
+            SagaId = sagaId;
+            Originator = originator;
 
-      Metadata = metadata.ToList().AsReadOnly();
+            var areMetadataKeysUnique = metadata.GroupBy(m => m.Key).All(g => g.Count() == 1);
+
+            if (!areMetadataKeysUnique)
+            {
+                throw new ChronicleException("Metadata keys are not unique");
+            }
+
+            Metadata = metadata.ToList().AsReadOnly();
+        }
+
+        public static ISagaContext Empty =>
+            new SagaContext(SagaId.NewSagaId(), string.Empty, Enumerable.Empty<ISagaContextMetadata>());
+
+        public SagaContextError SagaContextError { get; set; }
+
+        public static ISagaContext Create(SagaId sagaId, string originator, IEnumerable<ISagaContextMetadata> metadata)
+            => new SagaContext(sagaId, originator, metadata);
+
+        public static ISagaContextBuilder Create() => new SagaContextBuilder();
+
+        public ISagaContextMetadata GetMetadata(string key) => Metadata.Single(m => m.Key == key);
+
+        public bool TryGetMetadata(string key, out ISagaContextMetadata metadata)
+        {
+            metadata = Metadata.SingleOrDefault(m => m.Key == key);
+            return metadata != null;
+        }
     }
-
-    public static ISagaContext Empty
-        => new SagaContext(SagaId.NewSagaId(), string.Empty, Enumerable.Empty<ISagaContextMetadata>());
-
-    public SagaContextError SagaContextError { get; set; }
-
-    public static ISagaContext Create(SagaId sagaId, string originator, IEnumerable<ISagaContextMetadata> metadata)
-        => new SagaContext(sagaId, originator, metadata);
-
-    public static ISagaContextBuilder Create()
-        => new SagaContextBuilder();
-
-    public ISagaContextMetadata GetMetadata(string key)
-        => Metadata.Single(m => m.Key == key);
-
-    public bool TryGetMetadata(string key, out ISagaContextMetadata metadata)
-    {
-      metadata = Metadata.SingleOrDefault(m => m.Key == key);
-      return metadata != null;
-    }
-  }
 }

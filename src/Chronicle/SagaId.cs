@@ -2,19 +2,21 @@
 
 namespace Chronicle
 {
-  public struct SagaId
-  {
-    public string Id { get; set; }
-
-    public static implicit operator string(SagaId sagaId) => sagaId.Id;
-
-    public static implicit operator SagaId(string sagaId) => new SagaId { Id = sagaId };
-
-    public static SagaId NewSagaId()
+    public struct SagaId
     {
-      return new SagaId { Id = Guid.NewGuid().ToString() };
-    }
+        public string Id { get; }
 
-    public override string ToString() => Id;
-  }
+        private SagaId(string id)
+            => Id = id;
+
+        public static implicit operator string(SagaId sagaId) => sagaId.Id;
+
+        public static implicit operator SagaId(string sagaId)
+            => new SagaId(sagaId);
+
+        public static SagaId NewSagaId()
+            => new SagaId(Guid.NewGuid().ToString());
+
+        public override string ToString() => Id;
+    }
 }
