@@ -19,9 +19,9 @@ dotnet add package Chronicle_ --version 1.8.0
 
 # Getting started
 In order to create and process saga you need to go through few steps:
-1. Create a class that dervies either from ``Saga`` or ``Saga<TData>``
+1. Create a class that dervies either from ``Saga`` or ``Saga<TData>``.
 2. Inside saga implement particular steps that needs to be done or compensated in case of error. The initial step must be implemented as ``ISagaStartAction<TMessage>`` while the rest ``ISagaAction<TMessage>``. It's worth mentioning that up can implement as many start actions as you want. In this case first incomming message is going to initialize saga.
-3. Register all your sagas in ``Startup.cs`` by calling ``services.AddChronicle()``
+3. Register all your sagas in ``Startup.cs`` by calling ``services.AddChronicle()``.
 4. Inject ``ISagaCoordinator`` and inoke ``ProcessAsync()`` methods passing a message. Cooridnator will take care of everything by looking for all implemented sagas that can handle given message.
 
 Bellow is the very simple example of saga that completes once both messages (``Message1`` and ``Message2``) are received:
@@ -93,7 +93,7 @@ coordinator.ProcessAsync(new Message1 { Text = "Hello" }, context);
 coordinator.ProcessAsync(new Message2 { Text = "World" }, context);
 ```
 
-The reuslt looks as follows:
+The result looks as follows:
 
 ![Result](https://user-images.githubusercontent.com/7096476/53180548-0c885900-35f6-11e9-864b-6b6d13641f2a.png)
 

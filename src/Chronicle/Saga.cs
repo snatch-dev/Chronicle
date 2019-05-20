@@ -5,15 +5,15 @@ namespace Chronicle
 {
     public abstract class Saga : ISaga
     {
-        public Guid Id { get; private set; }
+        public SagaId Id { get; private set; }
 
         public SagaStates State { get; protected set; }
 
-        public virtual void Initialize(Guid id, SagaStates state)
+        public virtual void Initialize(SagaId id, SagaStates state)
             => (Id, State) = (id, state);
 
-        public virtual Guid ResolveId(object message, ISagaContext context)
-            => context.CorrelationId;
+        public virtual SagaId ResolveId(object message, ISagaContext context)
+            => context.SagaId;
 
         public virtual void Complete()
             => State = SagaStates.Completed;
@@ -24,9 +24,8 @@ namespace Chronicle
             return Task.CompletedTask;
         }
 
-        public virtual void Reject()
-            => State = SagaStates.Rejected;
-        
+        public virtual void Reject() => State = SagaStates.Rejected;
+
         public virtual Task RejectAsync()
         {
             Reject();
@@ -38,7 +37,7 @@ namespace Chronicle
     {
         public TData Data { get; protected set; }
 
-        public virtual void Initialize(Guid id, SagaStates state, TData data)
+        public virtual void Initialize(SagaId id, SagaStates state, TData data)
         {
             base.Initialize(id, state);
             Data = data;

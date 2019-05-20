@@ -26,21 +26,21 @@ namespace TestApp
 
             var context = SagaContext
                 .Create()
-                .WithCorrelationId(Guid.NewGuid())
+                .WithSagaId(SagaId.NewSagaId())
                 .WithOriginator("Test")
                 .WithMetadata("key", "lulz")
                 .Build();
-            
+
             var context2 = SagaContext
                 .Create()
-                .WithCorrelationId(Guid.NewGuid())
+                .WithSagaId(SagaId.NewSagaId())
                 .WithOriginator("Test")
                 .WithMetadata("key", "lulz")
                 .Build();
 
             coordinator.ProcessAsync(new Message1 { Text = "This message will be used one day..." }, context);
 
-            coordinator.ProcessAsync( new Message2 { Text = "But this one will be printed first! (We compensate from the end to beggining of the log)" }, 
+            coordinator.ProcessAsync( new Message2 { Text = "But this one will be printed first! (We compensate from the end to beggining of the log)" },
                 onCompleted: (m, ctx) =>
                 {
                     Console.WriteLine("My work is done");

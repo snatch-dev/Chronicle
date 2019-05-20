@@ -11,15 +11,15 @@ namespace Chronicle.Tests.Builders
         [Fact]
         public void WithCorrelationId_Sets_CorrelationId_Field_With_Given_Data()
         {
-            var correlationId = Guid.NewGuid();
+            var correlationId = SagaId.NewSagaId();
 
             var context = _builder
-                .WithCorrelationId(correlationId)
+                .WithSagaId(correlationId)
                 .Build();
 
-            context.CorrelationId.ShouldBe(correlationId);
+            context.SagaId.ShouldBe(correlationId);
         }
-        
+
         [Fact]
         public void WithOriginator_Sets_Originator_Field_With_Given_Data()
         {
@@ -31,7 +31,7 @@ namespace Chronicle.Tests.Builders
 
             context.Originator.ShouldBe(originator);
         }
-        
+
         [Fact]
         public void WithMetadata_Adds_SagaContextMetadata_To_List_With_Given_Values()
         {
@@ -46,17 +46,17 @@ namespace Chronicle.Tests.Builders
             context.Metadata.First().Key.ShouldBe(key);
             context.Metadata.First().Value.ShouldBe(value);
         }
-        
-        
+
+
 #region ARRANGE
 
         private readonly ISagaContextBuilder _builder;
-        
+
         public SagaContextBuilderTests()
         {
-            _builder = new SagaContextBuilder();    
+            _builder = new SagaContextBuilder();
         }
-        
+
 #endregion
     }
 }
