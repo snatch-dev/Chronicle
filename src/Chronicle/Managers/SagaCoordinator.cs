@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Chronicle.Persistence;
 using Chronicle.Utils;
@@ -12,6 +13,7 @@ namespace Chronicle.Managers
         private readonly ISagaLog _log;
         private readonly ISagaStateRepository _repository;
         private readonly ISagaSeeker _seeker;
+        private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1, 1);
 
         public SagaCoordinator(ISagaLog log, ISagaStateRepository repository, ISagaSeeker seeker)
         {
@@ -50,35 +52,44 @@ namespace Chronicle.Managers
             var sagaType = saga.GetType();
             var id = saga.ResolveId(message, context);
             var dataType = saga.GetSagaDataType();
-            var state = await _repository.ReadAsync(id, sagaType).ConfigureAwait(false);
 
-            if (state is null)
+            await Semaphore.WaitAsync();
+            try
             {
-                if (!(action is ISagaStartAction<TMessage>))
+                var state = await _repository.ReadAsync(id, sagaType).ConfigureAwait(false);
+
+                if (state is null)
+                {
+                    if (!(action is ISagaStartAction<TMessage>))
+                    {
+                        return;
+                    }
+
+                    state = CreateSagaState(id, sagaType, dataType);
+                }
+                else if (state.State == SagaStates.Rejected)
                 {
                     return;
                 }
 
-                state = CreateSagaState(id, sagaType, dataType);
-            }
-            else if (state.State == SagaStates.Rejected)
-            {
-                return;
-            }
+                InitializeSaga(saga, id, state);
 
-            InitializeSaga(saga, id, state);
+                try
+                {
+                    await action.HandleAsync(message, context);
+                }
+                catch (Exception e)
+                {
+                    context.SagaContextError = new SagaContextError(e);
+                    saga.Reject();
+                }
 
-            try
-            {
-                await action.HandleAsync(message, context);
+                await UpdateSagaAsync(message, saga, state);
             }
-            catch (Exception e)
+            finally
             {
-                context.SagaContextError = new SagaContextError(e);
-                saga.Reject();
+                Semaphore.Release();
             }
-
-            await UpdateSagaAsync(message, saga, state);
 
             if (saga.State is SagaStates.Rejected)
             {
