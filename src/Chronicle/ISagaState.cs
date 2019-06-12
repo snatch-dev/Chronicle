@@ -4,7 +4,7 @@ namespace Chronicle
 {
     public interface ISagaState
     {
-        Guid Id { get; }
+        SagaId Id { get; }
         Type Type { get; }
         SagaStates State { get; }
         object Data { get; }

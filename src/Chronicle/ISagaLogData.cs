@@ -4,7 +4,7 @@ namespace Chronicle
 {
     public interface ISagaLogData
     {
-        Guid Id { get; }
+        SagaId Id { get; }
         Type Type { get; }
         long CreatedAt { get; }
         object Message { get; }

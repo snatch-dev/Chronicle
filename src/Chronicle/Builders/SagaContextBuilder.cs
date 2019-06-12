@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Chronicle.Persistence;
 
@@ -6,16 +5,16 @@ namespace Chronicle.Builders
 {
     internal sealed class SagaContextBuilder : ISagaContextBuilder
     {
-        private Guid _correlationId;
+        private SagaId _sagaId;
         private string _originator;
         private readonly List<ISagaContextMetadata> _metadata;
 
         public SagaContextBuilder()
             => _metadata = new List<ISagaContextMetadata>();
 
-        public ISagaContextBuilder WithCorrelationId(Guid correlationId)
+        public ISagaContextBuilder WithSagaId(SagaId sagaId)
         {
-            _correlationId = correlationId;
+            _sagaId = sagaId;
             return this;
         }
 
@@ -24,7 +23,7 @@ namespace Chronicle.Builders
             _originator = originator;
             return this;
         }
-        
+
         public ISagaContextBuilder WithMetadata(string key, object value)
         {
             var metadata = new SagaContextMetadata(key, value);
@@ -32,7 +31,13 @@ namespace Chronicle.Builders
             return this;
         }
 
+        public ISagaContextBuilder WithMetadata(ISagaContextMetadata sagaContextMetadata)
+        {
+            _metadata.Add(sagaContextMetadata);
+            return this;
+        }
+
         public ISagaContext Build()
-            => SagaContext.Create(_correlationId, _originator, _metadata);
+            => SagaContext.Create(_sagaId, _originator, _metadata);
     }
 }

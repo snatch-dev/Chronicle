@@ -1,20 +1,19 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Chronicle.Builders;
 
 namespace Chronicle
 {
-    public class SagaContext : ISagaContext
+    public sealed class SagaContext : ISagaContext
     {
-        public Guid CorrelationId { get; }
+        public SagaId SagaId { get; }
 
         public string Originator { get; }
         public IReadOnlyCollection<ISagaContextMetadata> Metadata { get; }
 
-        private SagaContext(Guid correlationId, string originator, IEnumerable<ISagaContextMetadata> metadata)
+        private SagaContext(SagaId sagaId, string originator, IEnumerable<ISagaContextMetadata> metadata)
         {
-            CorrelationId = correlationId;
+            SagaId = sagaId;
             Originator = originator;
 
             var areMetadataKeysUnique = metadata.GroupBy(m => m.Key).All(g => g.Count() == 1);
@@ -27,17 +26,17 @@ namespace Chronicle
             Metadata = metadata.ToList().AsReadOnly();
         }
 
-        public static ISagaContext Empty
-            => new SagaContext(Guid.NewGuid(), string.Empty, Enumerable.Empty<ISagaContextMetadata>());
+        public static ISagaContext Empty =>
+            new SagaContext(SagaId.NewSagaId(), string.Empty, Enumerable.Empty<ISagaContextMetadata>());
 
-        public static ISagaContext Create(Guid correlationId, string originator, IEnumerable<ISagaContextMetadata> metadata)
-            => new SagaContext(correlationId, originator, metadata);
-        
-        public static ISagaContextBuilder Create()
-            => new SagaContextBuilder();
-        
-        public ISagaContextMetadata GetMetadata(string key)
-            => Metadata.Single(m => m.Key == key);
+        public SagaContextError SagaContextError { get; set; }
+
+        public static ISagaContext Create(SagaId sagaId, string originator, IEnumerable<ISagaContextMetadata> metadata)
+            => new SagaContext(sagaId, originator, metadata);
+
+        public static ISagaContextBuilder Create() => new SagaContextBuilder();
+
+        public ISagaContextMetadata GetMetadata(string key) => Metadata.Single(m => m.Key == key);
 
         public bool TryGetMetadata(string key, out ISagaContextMetadata metadata)
         {
