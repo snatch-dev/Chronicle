@@ -14,15 +14,10 @@ namespace Chronicle.Managers
             => _serviceProvider = serviceProvider;
 
         public IEnumerable<ISagaAction<TMessage>> Seek<TMessage>()
-        {
-            var t = _serviceProvider
-                .GetService<IEnumerable<ISagaAction<TMessage>>>()
-                .Union(_serviceProvider.GetService<IEnumerable<ISagaStartAction<TMessage>>>())
-                .GroupBy(s => s.GetType())
-                .Select(g => g.First())
-                .Distinct();
-
-            return t;
-        }
+            => _serviceProvider.GetService<IEnumerable<ISagaAction<TMessage>>>()
+            .Union(_serviceProvider.GetService<IEnumerable<ISagaStartAction<TMessage>>>())
+            .GroupBy(s => s.GetType())
+            .Select(g => g.First())
+            .Distinct();
     }
 }
