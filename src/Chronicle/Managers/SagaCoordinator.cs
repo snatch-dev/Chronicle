@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Chronicle.Persistence;
 using Chronicle.Utils;
@@ -13,7 +12,7 @@ namespace Chronicle.Managers
         private readonly ISagaLog _log;
         private readonly ISagaStateRepository _repository;
         private readonly ISagaSeeker _seeker;
-        private static readonly SemaphoreSlim Semaphore = new SemaphoreSlim(1, 1);
+        private readonly KeyedSemaphore _locker = new KeyedSemaphore();
 
         public SagaCoordinator(ISagaLog log, ISagaStateRepository repository, ISagaSeeker seeker)
         {
@@ -53,8 +52,7 @@ namespace Chronicle.Managers
             var id = saga.ResolveId(message, context);
             var dataType = saga.GetSagaDataType();
 
-            await Semaphore.WaitAsync();
-            try
+            using (await _locker.LockAsync(id))
             {
                 var state = await _repository.ReadAsync(id, sagaType).ConfigureAwait(false);
 
@@ -85,20 +83,16 @@ namespace Chronicle.Managers
                 }
 
                 await UpdateSagaAsync(message, saga, state);
-            }
-            finally
-            {
-                Semaphore.Release();
-            }
 
-            if (saga.State is SagaStates.Rejected)
-            {
-                await onRejected(message, context);
-                await CompensateAsync(saga, sagaType, context);
-            }
-            else if (saga.State is SagaStates.Completed)
-            {
-                await onCompleted(message, context);
+                if (saga.State is SagaStates.Rejected)
+                {
+                    await onRejected(message, context);
+                    await CompensateAsync(saga, sagaType, context);
+                }
+                else if (saga.State is SagaStates.Completed)
+                {
+                    await onCompleted(message, context);
+                }
             }
         }
 
@@ -130,7 +124,7 @@ namespace Chronicle.Managers
             state.Update(saga.State, updatedSagaData);
             var logData = SagaLogData.Create(saga.Id, sagaType, message);
 
-            var persistenceTasks = new Task[2] {_repository.WriteAsync(state), _log.WriteAsync(logData)};
+            var persistenceTasks = new Task[2] { _repository.WriteAsync(state), _log.WriteAsync(logData) };
 
             await Task.WhenAll(persistenceTasks).ConfigureAwait(false);
         }
