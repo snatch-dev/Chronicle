@@ -2,13 +2,13 @@
 
 namespace Chronicle
 {
-  public class SagaContextError
-  {
-    public SagaContextError(Exception e)
+    public class SagaContextError
     {
-      Exception = e;
-    }
+        public Exception Exception { get; }
 
-    public Exception Exception { get; }
-  }
+        public SagaContextError(Exception e)
+        {
+            Exception = e;
+        }
+    }
 }

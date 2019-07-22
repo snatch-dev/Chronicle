@@ -67,7 +67,7 @@ namespace Chronicle.Managers
 
                     state = CreateSagaState(id, sagaType, dataType);
                 }
-                else if (state.State == SagaStates.Rejected)
+                else if (state.State is SagaStates.Rejected)
                 {
                     return;
                 }
