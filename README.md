@@ -98,7 +98,7 @@ The result looks as follows:
 ![Result](https://user-images.githubusercontent.com/7096476/53180548-0c885900-35f6-11e9-864b-6b6d13641f2a.png)
 
 # Documentation
-If you're looking for documentation, you can find it [here](chronicle.readthedocs.io).
+If you're looking for documentation, you can find it [here](https://chronicle.readthedocs.io/en/latest/).
 
 # Icon
 Icon made by Smashicons from [www.flaticon.com](http://flaticon.com) is licensed by [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
