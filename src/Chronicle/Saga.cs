@@ -24,7 +24,11 @@ namespace Chronicle
             return Task.CompletedTask;
         }
 
-        public virtual void Reject() => State = SagaStates.Rejected;
+        public virtual void Reject()
+        {
+            State = SagaStates.Rejected;
+            throw new ChronicleException("Saga rejection called by method");
+        }
 
         public virtual Task RejectAsync()
         {
