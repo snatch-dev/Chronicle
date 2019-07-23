@@ -19,7 +19,7 @@ namespace Chronicle.Managers
             ISagaContext context) where TMessage : class
         {
             var action = (ISagaAction<TMessage>)saga;
-            
+
             try
             {
                 await action.HandleAsync(message, context);
@@ -33,8 +33,10 @@ namespace Chronicle.Managers
                     saga.Reject();
                 }
             }
-
-            await UpdateSagaAsync(message, saga, state);
+            finally
+            {
+                await UpdateSagaAsync(message, saga, state);
+            }
         }
         
         private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state)
