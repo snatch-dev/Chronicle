@@ -14,6 +14,9 @@ namespace Chronicle
         {
             services.AddTransient<ISagaCoordinator, SagaCoordinator>();
             services.AddTransient<ISagaSeeker, SagaSeeker>();
+            services.AddTransient<ISagaInitializer, SagaInitializer>();
+            services.AddTransient<ISagaProcessor, SagaProcessor>();
+            services.AddTransient<ISagaPostProcessor, SagaPostProcessor>();
 
             var chronicleBuilder = new ChronicleBuilder(services);
 

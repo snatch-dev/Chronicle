@@ -9,12 +9,12 @@ Chronicle is simple **process manager/saga pattern** implementation for .NET Cor
 Chornicle is available on [NuGet](https://www.nuget.org/packages/Chronicle_/)
 ### Package manager
 ```bash
-Install-Package Chronicle_ -Version 1.8.0
+Install-Package Chronicle_ -Version 2.0.1
 ```
 
 ### .NET CLI
 ```bash
-dotnet add package Chronicle_ --version 1.8.0
+dotnet add package Chronicle_ --version 2.0.1
 ```
 
 # Getting started
@@ -98,7 +98,7 @@ The result looks as follows:
 ![Result](https://user-images.githubusercontent.com/7096476/53180548-0c885900-35f6-11e9-864b-6b6d13641f2a.png)
 
 # Documentation
-If you're looking for documentation, you can find it [here](chronicle.readthedocs.io).
+If you're looking for documentation, you can find it [here](https://chronicle.readthedocs.io/en/latest/).
 
 # Icon
 Icon made by Smashicons from [www.flaticon.com](http://flaticon.com) is licensed by [Creative Commons BY 3.0](http://creativecommons.org/licenses/by/3.0/)
