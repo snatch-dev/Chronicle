@@ -18,13 +18,14 @@ dotnet add package Chronicle_ --version 2.0.1
 ```
 
 # Getting started
-In order to create and process saga you need to go through few steps:
-1. Create a class that dervies either from ``Saga`` or ``Saga<TData>``.
-2. Inside saga implement particular steps that needs to be done or compensated in case of error. The initial step must be implemented as ``ISagaStartAction<TMessage>`` while the rest ``ISagaAction<TMessage>``. It's worth mentioning that up can implement as many start actions as you want. In this case first incomming message is going to initialize saga.
-3. Register all your sagas in ``Startup.cs`` by calling ``services.AddChronicle()``.
-4. Inject ``ISagaCoordinator`` and inoke ``ProcessAsync()`` methods passing a message. Cooridnator will take care of everything by looking for all implemented sagas that can handle given message.
+In order to create and process a saga you need to go through a few steps:
+1. Create a class that dervies from either ``Saga`` or ``Saga<TData>``.
+2. Inside your saga implemention, inherit from one or several ``ISagaStartAction<TMessage>`` and ``ISagaAction<TMessage>`` to implement ``HandleAsync()`` and ``CompensateAsync()`` methods for each message type. An initial step must be implemented as an ``ISagaStartAction<TMessage>``, while the rest can be ``ISagaAction<TMessage>``. It's worth mentioning that you can implement as many ``ISagaStartAction<TMessage>`` as you want. In this case, the first incoming message is going to initialize the saga and any subsequent ``ISagaStartAction<TMessage>`` or ``ISagaAction<TMessage>`` will only update the current saga state.
+3. Register all your sagas in ``Startup.cs`` by calling ``services.AddChronicle()``. By default, ``AddChronicle()`` will use the ``InMemorySagaStateRepository`` and ``InMemorySagaLog`` for maintaining ``SagaState`` and for logging ``SagaLogData`` in the ``SagaLog``. The ``SagaLog`` maintains a historical record of which message handlers have been executed. Optionally, ``AddChronicle()`` accepts an ``Action<ChronicleBuilder>`` parameter which provides access to ``UseSagaStateRepository<ISagaStateRepository>()`` and ``UseSagaLog<ISagaLog>()`` for custom implementations of ``ISagaStateRepository`` and ``ISagaLog``. **If either method is called, then both methods need to be called**.
+4. Inject ``ISagaCoordinator`` and invoke ``ProcessAsync()`` methods passing a message. The coordinator will take care of everything by looking for all implemented sagas that can handle a given message.
+5. To complete a successful saga, call ``CompleteSaga()`` or ``CompleteSagaAsync()``. This will update the ``SagaState`` to Completed. To flag a saga which has failed or been rejected, call the ``Reject()`` or ``RejectAsync()`` methods to update the ``SagaState`` to Rejected. Doing so will utilize the ``SagaLog`` to call each message type's ``CompensateAsync()`` in the reverse order of their respective ``HandleAsync()`` method was called. Additionally, an unhanded exception thrown from a ``HandleAsync()`` method will cause ``Reject()`` to be called and begin the compensation.
 
-Bellow is the very simple example of saga that completes once both messages (``Message1`` and ``Message2``) are received:
+Below is the very simple example of saga that completes once both messages (``Message1`` and ``Message2``) are received:
 
 ```csharp
 public class Message1
