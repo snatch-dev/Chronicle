@@ -17,9 +17,9 @@ namespace Chronicle.Tests.Builders
             _builder.UseInMemoryPersistence();
 
             _services.ShouldContain(sd =>
-                sd.ServiceType == typeof(ISagaStateRepository) &&
-                sd.ImplementationType == typeof(InMemorySagaStateRepository) &&
-                sd.Lifetime == ServiceLifetime.Singleton);
+               sd.ServiceType == typeof(ISagaStateRepository) &&
+               sd.ImplementationType == typeof(InMemorySagaStateRepository) &&
+               sd.Lifetime == ServiceLifetime.Singleton);
         }
 
         [Fact]
@@ -28,9 +28,31 @@ namespace Chronicle.Tests.Builders
             _builder.UseInMemoryPersistence();
 
             _services.ShouldContain(sd =>
-                sd.ServiceType == typeof(ISagaLog) &&
-                sd.ImplementationType == typeof(InMemorySagaLog) &&
-                sd.Lifetime == ServiceLifetime.Singleton);
+               sd.ServiceType == typeof(ISagaLog) &&
+               sd.ImplementationType == typeof(InMemorySagaLog) &&
+               sd.Lifetime == ServiceLifetime.Singleton);
+        }
+
+        [Fact]
+        public void UseRedisPersistence_Registers_RedisSagaStateRepository_As_Transient()
+        {
+            _builder.UseRedisPersistence();
+
+            _services.ShouldContain(sd =>
+               sd.ServiceType == typeof(ISagaStateRepository) &&
+               sd.ImplementationType == typeof(RedisSagaStateRepository) &&
+               sd.Lifetime == ServiceLifetime.Transient);
+        }
+
+        [Fact]
+        public void UseRedisPersistence_Registers_RedisSagaLog_As_Transient()
+        {
+            _builder.UseRedisPersistence();
+
+            _services.ShouldContain(sd =>
+               sd.ServiceType == typeof(ISagaLog) &&
+               sd.ImplementationType == typeof(RedisSagaLog) &&
+               sd.Lifetime == ServiceLifetime.Transient);
         }
 
         [Fact]
@@ -39,9 +61,9 @@ namespace Chronicle.Tests.Builders
             _builder.UseSagaLog<MySagaLog>();
 
             _services.ShouldContain(sd =>
-                sd.ServiceType == typeof(ISagaLog) &&
-                sd.ImplementationType == typeof(MySagaLog) &&
-                sd.Lifetime == ServiceLifetime.Transient);
+               sd.ServiceType == typeof(ISagaLog) &&
+               sd.ImplementationType == typeof(MySagaLog) &&
+               sd.Lifetime == ServiceLifetime.Transient);
         }
 
         [Fact]
@@ -50,9 +72,26 @@ namespace Chronicle.Tests.Builders
             _builder.UseSagaStateRepository<MySagaStateRepository>();
 
             _services.ShouldContain(sd =>
-                sd.ServiceType == typeof(ISagaStateRepository) &&
-                sd.ImplementationType == typeof(MySagaStateRepository) &&
-                sd.Lifetime == ServiceLifetime.Transient);
+               sd.ServiceType == typeof(ISagaStateRepository) &&
+               sd.ImplementationType == typeof(MySagaStateRepository) &&
+               sd.Lifetime == ServiceLifetime.Transient);
+        }
+
+        [Fact]
+        public void ServiceCollection_Contains_ChronicleConfig_As_Singleton()
+        {
+            _services.ShouldContain(sd =>
+               sd.ServiceType == typeof(IChronicleConfig) &&
+               sd.Lifetime == ServiceLifetime.Singleton);
+        }
+
+        [Fact]
+        public void DeleteOnComplete_Sets_DeleteOnComplete_To_True()
+        {
+            _builder.DeleteOnCompleted();
+
+            var sp = _services.BuildServiceProvider();
+            sp.GetService<IChronicleConfig>().DeleteOnCompleted.ShouldBe(true);
         }
 
         #region ARRANGE
@@ -68,7 +107,12 @@ namespace Chronicle.Tests.Builders
 
         public class MySagaLog : ISagaLog
         {
-            public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type)
+            public Task DeleteAsync(SagaId sagaId, Type sagaType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId sagaId, Type sagaType)
             {
                 throw new NotImplementedException();
             }
@@ -81,7 +125,12 @@ namespace Chronicle.Tests.Builders
 
         public class MySagaStateRepository : ISagaStateRepository
         {
-            public Task<ISagaState> ReadAsync(SagaId id, Type type)
+            public Task DeleteAsync(SagaId sagaId, Type sagaType)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<ISagaState> ReadAsync(SagaId sagaId, Type sagaType, Type dataType)
             {
                 throw new NotImplementedException();
             }

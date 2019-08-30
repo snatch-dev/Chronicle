@@ -34,19 +34,18 @@ namespace Chronicle
             return services;
         }
 
-        private static void RegisterSagas(this IServiceCollection services)
-            => services.Scan(scan =>
-            {
-                var assembly = Assembly.GetEntryAssembly();
+        private static void RegisterSagas(this IServiceCollection services) => services.Scan(scan =>
+        {
+            var assembly = Assembly.GetEntryAssembly();
 
-                scan
-                    .FromAssemblies(assembly)
-                    .AddClasses(classes => classes.AssignableTo(typeof(ISaga)))
-                    .As(t => t
-                        .GetTypeInfo()
-                        .GetInterfaces(includeInherited: false))
-                    .WithTransientLifetime();
-            });
+            scan
+                .FromAssemblies(assembly)
+                .AddClasses(classes => classes.AssignableTo(typeof(ISaga)))
+                .As(t => t
+                   .GetTypeInfo()
+                   .GetInterfaces(includeInherited: false))
+                .WithTransientLifetime();
+        });
 
         private static IEnumerable<Type> GetInterfaces(this Type type, bool includeInherited)
         {

@@ -7,7 +7,9 @@ namespace Chronicle
     {
         IServiceCollection Services { get; }
         IChronicleBuilder UseInMemoryPersistence();
+        IChronicleBuilder UseRedisPersistence();
         IChronicleBuilder UseSagaLog<TSagaLog>() where TSagaLog : ISagaLog;
         IChronicleBuilder UseSagaStateRepository<TRepository>() where TRepository : ISagaStateRepository;
+        IChronicleBuilder DeleteOnCompleted();
     }
 }

@@ -14,8 +14,8 @@ namespace Chronicle.Managers
             _repository = repository;
             _log = log;
         }
-        
-        public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaState state, 
+
+        public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaState state,
             ISagaContext context) where TMessage : class
         {
             var action = (ISagaAction<TMessage>)saga;
@@ -38,21 +38,20 @@ namespace Chronicle.Managers
                 await UpdateSagaAsync(message, saga, state);
             }
         }
-        
+
         private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state)
-            where TMessage : class
+        where TMessage : class
         {
             var sagaType = saga.GetType();
 
             var updatedSagaData = sagaType.GetProperty(nameof(ISaga<object>.Data))?.GetValue(saga);
 
             state.Update(saga.State, updatedSagaData);
-            var logData = SagaLogData.Create(saga.Id, sagaType, message);
+            var logData = SagaLogData.Create(saga.Id, sagaType, message, message.GetType());
 
-            var persistenceTasks = new []
-            {
-                _repository.WriteAsync(state), 
-                _log.WriteAsync(logData)
+            var persistenceTasks = new[] {
+                _repository.WriteAsync (state),
+                _log.WriteAsync (logData)
             };
 
             await Task.WhenAll(persistenceTasks).ConfigureAwait(false);

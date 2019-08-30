@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace Chronicle
 {
@@ -6,16 +7,14 @@ namespace Chronicle
     {
         public string Id { get; }
 
-        private SagaId(string id)
-            => Id = id;
+        [JsonConstructor]
+        public SagaId(string id) => Id = id;
 
         public static implicit operator string(SagaId sagaId) => sagaId.Id;
 
-        public static implicit operator SagaId(string sagaId)
-            => new SagaId(sagaId);
+        public static implicit operator SagaId(string sagaId) => new SagaId(sagaId);
 
-        public static SagaId NewSagaId()
-            => new SagaId(Guid.NewGuid().ToString());
+        public static SagaId NewSagaId() => new SagaId(Guid.NewGuid().ToString());
 
         public override string ToString() => Id;
     }

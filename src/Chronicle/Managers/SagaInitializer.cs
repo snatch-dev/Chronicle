@@ -13,14 +13,14 @@ namespace Chronicle.Managers
         {
             _repository = repository;
         }
-        
+
         public async Task<(bool isInitialized, ISagaState state)> TryInitializeAsync<TMessage>(ISaga saga, SagaId id, TMessage _)
         {
             var action = (ISagaAction<TMessage>)saga;
             var sagaType = saga.GetType();
             var dataType = saga.GetSagaDataType();
-            
-            var state = await _repository.ReadAsync(id, sagaType).ConfigureAwait(false);
+
+            var state = await _repository.ReadAsync(id, sagaType, dataType).ConfigureAwait(false);
 
             if (state is null)
             {
@@ -33,14 +33,14 @@ namespace Chronicle.Managers
             }
             else if (state.State is SagaStates.Rejected)
             {
-                return (false, default);;
+                return (false, default);
             }
 
             InitializeSaga(saga, id, state);
 
             return (true, state);
         }
-        
+
         private static ISagaState CreateSagaState(SagaId id, Type sagaType, Type dataType)
         {
             var sagaData = dataType != null ? Activator.CreateInstance(dataType) : null;
