@@ -37,8 +37,8 @@ namespace Chronicle.Persistence
                 sagaLogDatas = JsonConvert.DeserializeObject<List<SagaLogData>>(cachedSagaLogDatasString);
                 serializedSagaLogDatas = sagaLogDatas.Select(s =>
                 {
-                    var data = (s.Message as JObject).ToObject(s.MessageType);
-                    return new SagaLogData(s.SagaId, s.SagaType, s.CreatedAt, s.Message, s.MessageType);
+                    var message = (s.Message as JObject).ToObject(s.MessageType);
+                    return new SagaLogData(s.SagaId, s.SagaType, s.CreatedAt, message, s.MessageType);
                 });
             }
             return serializedSagaLogDatas;
