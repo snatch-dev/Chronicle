@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Chronicle.Persistence
 {
-    internal class SagaState : ISagaState
+    public class SagaState : ISagaState
     {
         public SagaId SagaId { get; }
         public Type SagaType { get; }

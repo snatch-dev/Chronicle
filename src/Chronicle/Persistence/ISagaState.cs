@@ -1,6 +1,6 @@
 using System;
 
-namespace Chronicle
+namespace Chronicle.Persistence
 {
     public interface ISagaState
     {

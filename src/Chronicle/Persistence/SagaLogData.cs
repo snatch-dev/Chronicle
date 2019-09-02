@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace Chronicle.Persistence
 {
-    internal class SagaLogData : ISagaLogData
+    public class SagaLogData : ISagaLogData
     {
         public SagaId SagaId { get; }
         public Type SagaType { get; }
