@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Chronicle.Persistence;
 
 namespace Chronicle.Managers
 {
