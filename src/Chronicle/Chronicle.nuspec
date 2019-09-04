@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package >
+  <metadata minClientVersion="3.3.0">
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <projectUrl>https://github.com/rangerlabs/Chronicle</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Ranger Chronicle package</description>
+    <!-- <releaseNotes>Summary of changes made in this release of the package.</releaseNotes> -->
+    <copyright>Copyright 2019</copyright>
+    <tags>Ranger Chronicle</tags>
+    <packageTypes>
+      <packageType name="Dependency" />
+    </packageTypes>
+    <dependencies>
+      <dependency id="Microsoft.Extensions.Configuration.FileExtensions" version="2.2.0" />
+      <dependency id="Microsoft.Extensions.DependencyInjection" version="2.2.0" />
+      <dependency id="Microsoft.Extensions.Caching.Redis" version="2.2.0" />
+      <dependency id="Microsoft.Extensions.Options.ConfigurationExtensions" version="2.2.0" />
+      <dependency id="Scrutor" version="3.0.2" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\$configuration$\netstandard2.0\$id$.pdb" target="lib\netstandard\" />
+  </files>
+</package>
