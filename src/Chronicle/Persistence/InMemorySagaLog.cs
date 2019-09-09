@@ -9,10 +9,13 @@ namespace Chronicle.Persistence
     {
         private readonly List<ISagaLogData> _sagaLog;
 
-        public InMemorySagaLog() 
+        public InMemorySagaLog()
             => _sagaLog = new List<ISagaLogData>();
 
-        public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type) 
+        public Task DeleteAsync(SagaId sagaId, Type sagaType)
+            => Task.FromResult(_sagaLog.RemoveAll(sld => sld.Id == sagaId && sld.Type == sagaType));
+
+        public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type)
             => Task.FromResult(_sagaLog.Where(sld => sld.Id == id && sld.Type == type));
 
         public async Task WriteAsync(ISagaLogData message)

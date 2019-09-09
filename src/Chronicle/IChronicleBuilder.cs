@@ -9,5 +9,6 @@ namespace Chronicle
         IChronicleBuilder UseInMemoryPersistence();
         IChronicleBuilder UseSagaLog<TSagaLog>() where TSagaLog : ISagaLog;
         IChronicleBuilder UseSagaStateRepository<TRepository>() where TRepository : ISagaStateRepository;
+        IChronicleBuilder DeleteOnCompleted();
     }
 }

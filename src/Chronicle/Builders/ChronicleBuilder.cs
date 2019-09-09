@@ -8,9 +8,14 @@ namespace Chronicle.Builders
     internal class ChronicleBuilder : IChronicleBuilder
     {
         public IServiceCollection Services { get; }
+        public IChronicleConfig Config { get; }
 
         public ChronicleBuilder(IServiceCollection services)
-            => Services = services;
+        {
+            Services = services;
+            Config = new ChronicleConfig();
+            services.AddSingleton<IChronicleConfig>(Config);
+        }
 
         public IChronicleBuilder UseInMemoryPersistence()
         {
@@ -28,6 +33,12 @@ namespace Chronicle.Builders
         public IChronicleBuilder UseSagaStateRepository<TRepository>() where TRepository : ISagaStateRepository
         {
             Services.AddTransient(typeof(ISagaStateRepository), typeof(TRepository));
+            return this;
+        }
+
+        public IChronicleBuilder DeleteOnCompleted()
+        {
+            Config.DeleteOnCompleted = true;
             return this;
         }
     }
