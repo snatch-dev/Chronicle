@@ -12,14 +12,14 @@ namespace Chronicle.Persistence
         public InMemorySagaStateRepository() => _repository = new List<ISagaState>();
 
         public Task DeleteAsync(SagaId sagaId, Type sagaType)
-            => Task.FromResult(_repository.RemoveAll(s => s.Id == sagaId && s.Type == sagaType));
+            => Task.FromResult(_repository.RemoveAll(s => s.SagaId == sagaId && s.SagaType == sagaType));
 
         public Task<ISagaState> ReadAsync(SagaId id, Type type)
-            => Task.FromResult(_repository.FirstOrDefault(s => s.Id == id && s.Type == type));
+            => Task.FromResult(_repository.FirstOrDefault(s => s.SagaId == id && s.SagaType == type));
 
         public async Task WriteAsync(ISagaState state)
         {
-            var sagaDataToUpdate = await ReadAsync(state.Id, state.Type);
+            var sagaDataToUpdate = await ReadAsync(state.SagaId, state.SagaType);
 
             _repository.Remove(sagaDataToUpdate);
             _repository.Add(state);

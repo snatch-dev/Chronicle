@@ -13,10 +13,10 @@ namespace Chronicle.Persistence
             => _sagaLog = new List<ISagaLogData>();
 
         public Task DeleteAsync(SagaId sagaId, Type sagaType)
-            => Task.FromResult(_sagaLog.RemoveAll(sld => sld.Id == sagaId && sld.Type == sagaType));
+            => Task.FromResult(_sagaLog.RemoveAll(sld => sld.SagaId == sagaId && sld.SagaType == sagaType));
 
         public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type)
-            => Task.FromResult(_sagaLog.Where(sld => sld.Id == id && sld.Type == type));
+            => Task.FromResult(_sagaLog.Where(sld => sld.SagaId == id && sld.SagaType == type));
 
         public async Task WriteAsync(ISagaLogData message)
         {
