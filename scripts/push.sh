@@ -1,1 +1,0 @@
-nuget push ./pkgs/Chronicle*.nupkg $1 -source https://www.myget.org/F/ranger-labs/api/v3/index.json
