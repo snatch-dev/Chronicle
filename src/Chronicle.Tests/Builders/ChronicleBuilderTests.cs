@@ -63,14 +63,6 @@ namespace Chronicle.Tests.Builders
                sd.Lifetime == ServiceLifetime.Singleton);
         }
 
-        [Fact]
-        public void DeleteOnComplete_Sets_DeleteOnComplete_To_True()
-        {
-            _builder.DeleteOnCompleted();
-
-            var sp = _services.BuildServiceProvider();
-            sp.GetService<IChronicleConfig>().DeleteOnCompleted.ShouldBe(true);
-        }
 
         #region ARRANGE
 
@@ -85,11 +77,6 @@ namespace Chronicle.Tests.Builders
 
         public class MySagaLog : ISagaLog
         {
-            public Task DeleteAsync(SagaId sagaId, Type sagaType)
-            {
-                throw new NotImplementedException();
-            }
-
             public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type)
             {
                 throw new NotImplementedException();
@@ -103,11 +90,6 @@ namespace Chronicle.Tests.Builders
 
         public class MySagaStateRepository : ISagaStateRepository
         {
-            public Task DeleteAsync(SagaId sagaId, Type sagaType)
-            {
-                throw new NotImplementedException();
-            }
-
             public Task<ISagaState> ReadAsync(SagaId id, Type type)
             {
                 throw new NotImplementedException();
