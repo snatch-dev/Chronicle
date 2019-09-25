@@ -8,14 +8,10 @@ namespace Chronicle.Managers
     internal sealed class SagaPostProcessor : ISagaPostProcessor
     {
         private readonly ISagaLog _log;
-        private readonly ISagaStateRepository _stateRepository;
-        private readonly IChronicleConfig _config;
 
-        public SagaPostProcessor(ISagaLog log, ISagaStateRepository stateRepository, IChronicleConfig config)
+        public SagaPostProcessor(ISagaLog log)
         {
             _log = log;
-            _stateRepository = stateRepository;
-            _config = config;
         }
 
         public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaContext context,
@@ -31,11 +27,6 @@ namespace Chronicle.Managers
                     break;
                 case SagaStates.Completed:
                     await onCompleted(message, context);
-                    if (_config.DeleteOnCompleted)
-                    {
-                        await _log.DeleteAsync(saga.Id, sagaType);
-                        await _stateRepository.DeleteAsync(saga.Id, sagaType);
-                    }
                     break;
             }
         }

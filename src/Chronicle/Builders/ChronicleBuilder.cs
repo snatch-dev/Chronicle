@@ -35,11 +35,5 @@ namespace Chronicle.Builders
             Services.AddTransient(typeof(ISagaStateRepository), typeof(TRepository));
             return this;
         }
-
-        public IChronicleBuilder DeleteOnCompleted()
-        {
-            Config.DeleteOnCompleted = true;
-            return this;
-        }
     }
 }

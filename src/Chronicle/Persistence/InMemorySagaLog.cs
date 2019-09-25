@@ -12,9 +12,6 @@ namespace Chronicle.Persistence
         public InMemorySagaLog()
             => _sagaLog = new List<ISagaLogData>();
 
-        public Task DeleteAsync(SagaId sagaId, Type sagaType)
-            => Task.FromResult(_sagaLog.RemoveAll(sld => sld.SagaId == sagaId && sld.SagaType == sagaType));
-
         public Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type)
             => Task.FromResult(_sagaLog.Where(sld => sld.SagaId == id && sld.SagaType == type));
 
