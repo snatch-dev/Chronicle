@@ -10,10 +10,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Chronicle_"  Version="2.0.1"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Chronicle\Chronicle.csproj" />
-  </ItemGroup>
+<!--  <ItemGroup>-->
+<!--    <ProjectReference Include="..\Chronicle\Chronicle.csproj" />-->
+<!--  </ItemGroup>-->
 
 </Project>
