@@ -25,7 +25,6 @@ namespace TestApp
 
         public Task HandleAsync(Message2 message, ISagaContext context)
         {
-
             Data.IsMessage2 = true;
             Console.WriteLine("M2 reached!");
             CompleteSaga();
