@@ -17,13 +17,13 @@ Chornicle is available on [NuGet](https://www.nuget.org/packages/Chronicle_/)
 ### Package manager
 
 ```bash
-Install-Package Chronicle_ -Version 2.0.1
+Install-Package Chronicle_ -Version 2.1.0
 ```
 
 ### .NET CLI
 
 ```bash
-dotnet add package Chronicle_ --version 2.0.1
+dotnet add package Chronicle_ --version 2.1.0
 ```
 
 # Getting started
