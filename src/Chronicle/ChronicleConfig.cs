@@ -1,6 +1,5 @@
 namespace Chronicle
 {
-    public class ChronicleConfig : IChronicleConfig
-    {
-    }
+    internal class ChronicleConfig : IChronicleConfig
+    { }
 }
