@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Title>Chronicle.Integrations.MongoDB</Title>
+    <AssemblyName>Chronicle.Integrations.MongoDB</AssemblyName>
+    <PackageId>Chronicle_.Integrations.MongoDB</PackageId>
+    <PackageTags>chronicle;saga;mongodb</PackageTags>
+    <Description>Implementation of saga pattern for .NET Core</Description>
+    <Authors>Dariusz Pawlukiewicz</Authors>
+    <PackageProjectUrl>https://github.com/chronicle-stack/Chronicle.Integrations.MongoDB</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/chronicle-stack/Chronicle/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://avatars1.githubusercontent.com/u/42150754?s=200</PackageIconUrl>
+    <VersionPrefix>3.1.0</VersionPrefix>
+    <Version>3.1.0</Version>
+    <AssemblyVersion>3.1.0</AssemblyVersion>
+    <FileVersion>3.1.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Chronicle_" Version="3.*" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
+    <PackageReference Include="MongoDB.Driver" Version="2.9.2" />
+  </ItemGroup>
+
+</Project>
