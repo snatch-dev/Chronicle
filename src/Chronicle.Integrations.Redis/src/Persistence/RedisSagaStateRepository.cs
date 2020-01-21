@@ -12,7 +12,7 @@ namespace Chronicle.Integrations.Redis.Persistence
 
         public RedisSagaStateRepository(IDistributedCache cache)
             => _cache = cache;
-        
+
         public async Task<ISagaState> ReadAsync(SagaId sagaId, Type sagaType)
         {
             if (string.IsNullOrWhiteSpace(sagaId))
@@ -26,7 +26,7 @@ namespace Chronicle.Integrations.Redis.Persistence
 
             RedisSagaState state = null;
             var cachedSagaState = await _cache.GetStringAsync(StateId(sagaId, sagaType));
-            
+
             if (!string.IsNullOrWhiteSpace(cachedSagaState))
             {
                 state = JsonConvert.DeserializeObject<RedisSagaState>(cachedSagaState);
@@ -42,8 +42,7 @@ namespace Chronicle.Integrations.Redis.Persistence
                 throw new ChronicleException($"{nameof(state)} was null.");
             }
 
-            var sagaState = new RedisSagaState(state.Id, state.Type, state.State, state.Data, state.Data.GetType());
-
+            var sagaState = new RedisSagaState { SagaId = state.Id, Type = state.Type, State = state.State, Data = state.Data, DataType = state.Data.GetType() };
 
             var serializedSagaState = JsonConvert.SerializeObject(sagaState);
             await _cache.SetStringAsync(StateId(state.Id, state.Type), serializedSagaState);
