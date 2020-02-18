@@ -17,7 +17,7 @@ namespace Chronicle.Managers
         private readonly ISagaPostProcessor _postProcessor;
         private static readonly KeyedLocker Locker = new KeyedLocker();
 
-        public SagaCoordinator(ISagaSeeker seeker, ISagaInitializer initializer, ISagaProcessor processor, 
+        public SagaCoordinator(ISagaSeeker seeker, ISagaInitializer initializer, ISagaProcessor processor,
             ISagaPostProcessor postProcessor)
         {
             _seeker = seeker;
@@ -26,7 +26,7 @@ namespace Chronicle.Managers
             _postProcessor = postProcessor;
         }
 
-        public Task ProcessAsync<TMessage>(TMessage message, ISagaContext context = null) where TMessage : class 
+        public Task ProcessAsync<TMessage>(TMessage message, ISagaContext context = null) where TMessage : class
             => ProcessAsync(message: message, onCompleted: null, onRejected: null, context: context);
 
         public async Task ProcessAsync<TMessage>(TMessage message, Func<TMessage, ISagaContext, Task> onCompleted = null,
@@ -59,11 +59,11 @@ namespace Chronicle.Managers
             {
                 var (isInitialized, state) = await _initializer.TryInitializeAsync(saga, id, message);
 
-                if (!isInitialized)
+                if (!isInitialized || state.State is SagaStates.Completed)
                 {
                     return;
                 }
-                
+
                 await _processor.ProcessAsync(saga, message, state, context);
                 await _postProcessor.ProcessAsync(saga, message, context, onCompleted, onRejected);
             }
