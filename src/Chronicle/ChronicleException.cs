@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics.Tracing;
 
 namespace Chronicle
 {
@@ -7,7 +6,10 @@ namespace Chronicle
     {
         public ChronicleException(string message) : base(message)
         {
-            
+        }
+
+        public ChronicleException(string message, Exception innerException) : base(message, innerException)
+        {
         }
     }
 }

@@ -1,5 +1,3 @@
-using System;
-using Chronicle.Errors;
 using Chronicle.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
