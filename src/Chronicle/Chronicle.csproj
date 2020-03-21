@@ -11,10 +11,10 @@
       <PackageProjectUrl>https://github.com/chronicle-stack/Chronicle</PackageProjectUrl>
       <PackageLicenseUrl>https://github.com/chronicle-stack/Chronicle/blob/master/LICENSE</PackageLicenseUrl>
       <PackageIconUrl>https://avatars1.githubusercontent.com/u/42150754?s=200</PackageIconUrl>
-      <VersionPrefix>3.1.0</VersionPrefix>
-      <Version>3.1.0</Version>
-      <AssemblyVersion>3.1.0.0</AssemblyVersion>
-      <FileVersion>3.1.0.0</FileVersion>
+      <VersionPrefix>3.2.0</VersionPrefix>
+      <Version>3.2.0</Version>
+      <AssemblyVersion>3.2.0.0</AssemblyVersion>
+      <FileVersion>3.2.0.0</FileVersion>
       <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
