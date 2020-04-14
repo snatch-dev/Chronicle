@@ -1,11 +1,7 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Chronicle.Async;
-using Chronicle.Persistence;
-using Chronicle.Utils;
 
 namespace Chronicle.Managers
 {
@@ -33,16 +29,14 @@ namespace Chronicle.Managers
             Func<TMessage, ISagaContext, Task> onRejected = null, ISagaContext context = null) where TMessage : class
         {
             var actions = _seeker.Seek<TMessage>().ToList();
-            var sagaTasks = new List<Task>();
 
             Task EmptyHook(TMessage m, ISagaContext ctx) => Task.CompletedTask;
-            onCompleted = onCompleted ?? EmptyHook;
-            onRejected = onRejected ?? EmptyHook;
+            onCompleted ??= EmptyHook;
+            onRejected ??= EmptyHook;
 
-            foreach (var action in actions)
-            {
-                sagaTasks.Add(ProcessAsync(message, action, onCompleted, onRejected, context));
-            }
+            var sagaTasks = actions
+                .Select(action => ProcessAsync(message, action, onCompleted, onRejected, context))
+                .ToList();
 
             await Task.WhenAll(sagaTasks);
         }
@@ -51,7 +45,7 @@ namespace Chronicle.Managers
             Func<TMessage, ISagaContext, Task> onCompleted, Func<TMessage, ISagaContext, Task> onRejected,
             ISagaContext context = null) where TMessage : class
         {
-            context = context ?? SagaContext.Empty;
+            context ??= SagaContext.Empty;
             var saga = (ISaga)action;
             var id = saga.ResolveId(message, context);
 

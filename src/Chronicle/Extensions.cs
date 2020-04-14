@@ -37,10 +37,10 @@ namespace Chronicle
         private static void RegisterSagas(this IServiceCollection services)
             => services.Scan(scan =>
             {
-                var assembly = Assembly.GetEntryAssembly();
+                var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
                 scan
-                    .FromAssemblies(assembly)
+                    .FromAssemblies(assemblies)
                     .AddClasses(classes => classes.AssignableTo(typeof(ISaga)))
                     .As(t => t
                         .GetTypeInfo()

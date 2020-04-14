@@ -24,15 +24,15 @@ namespace Chronicle
             return Task.CompletedTask;
         }
 
-        public virtual void Reject()
+        public virtual void Reject(Exception innerException = null)
         {
             State = SagaStates.Rejected;
-            throw new ChronicleException("Saga rejection called by method");
+            throw new ChronicleException("Saga rejection called by method", innerException);
         }
 
-        public virtual Task RejectAsync()
+        public virtual Task RejectAsync(Exception innerException = null)
         {
-            Reject();
+            Reject(innerException);
             return Task.CompletedTask;
         }
     }
