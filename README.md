@@ -3,7 +3,7 @@
 
 
 
-Chronicle is simple **process manager/saga pattern** implementation for .NET Core that helps you manage long-living and disitrbuted transactions.
+Chronicle is simple **process manager/saga pattern** implementation for .NET Core that helps you manage long-living and distirbuted transactions.
 
 |   | master  | develop  |
 |---|--------|----------|
@@ -14,12 +14,12 @@ Chronicle is simple **process manager/saga pattern** implementation for .NET Cor
 Chornicle is available on [NuGet](https://www.nuget.org/packages/Chronicle_/)
 ### Package manager
 ```bash
-Install-Package Chronicle_ -Version 3.1.0
+Install-Package Chronicle_ -Version 3.2.1
 ```
 
 ### .NET CLI
 ```bash
-dotnet add package Chronicle_ --version 3.1.0
+dotnet add package Chronicle_ --version 3.2.1
 ```
 
 # Getting started

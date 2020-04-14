@@ -14,8 +14,8 @@ namespace Chronicle.Managers
             _repository = repository;
             _log = log;
         }
-        
-        public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaState state, 
+
+        public async Task ProcessAsync<TMessage>(ISaga saga, TMessage message, ISagaState state,
             ISagaContext context) where TMessage : class
         {
             var action = (ISagaAction<TMessage>)saga;
@@ -24,13 +24,13 @@ namespace Chronicle.Managers
             {
                 await action.HandleAsync(message, context);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                context.SagaContextError = new SagaContextError(e);
+                context.SagaContextError = new SagaContextError(ex);
 
                 if (!(saga.State is SagaStates.Rejected))
                 {
-                    saga.Reject();
+                    saga.Reject(ex);
                 }
             }
             finally
@@ -38,7 +38,7 @@ namespace Chronicle.Managers
                 await UpdateSagaAsync(message, saga, state);
             }
         }
-        
+
         private async Task UpdateSagaAsync<TMessage>(TMessage message, ISaga saga, ISagaState state)
             where TMessage : class
         {
@@ -51,7 +51,7 @@ namespace Chronicle.Managers
 
             var persistenceTasks = new []
             {
-                _repository.WriteAsync(state), 
+                _repository.WriteAsync(state),
                 _log.WriteAsync(logData)
             };
 
