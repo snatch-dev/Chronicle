@@ -7,11 +7,13 @@ namespace Chronicle.Managers
     internal sealed class SagaProcessor : ISagaProcessor
     {
         private readonly ISagaStateRepository _repository;
+        private readonly IChronicleConfiguration _configuration;
         private readonly ISagaLog _log;
 
-        public SagaProcessor(ISagaStateRepository repository, ISagaLog log)
+        public SagaProcessor(ISagaStateRepository repository, IChronicleConfiguration configuration, ISagaLog log)
         {
             _repository = repository;
+            _configuration = configuration;
             _log = log;
         }
 
@@ -49,13 +51,21 @@ namespace Chronicle.Managers
             state.Update(saga.State, updatedSagaData);
             var logData = SagaLogData.Create(saga.Id, sagaType, message);
 
-            var persistenceTasks = new []
+            if (_configuration.AllowConcurrentWrites)
             {
-                _repository.WriteAsync(state),
-                _log.WriteAsync(logData)
-            };
+                var persistenceTasks = new[]
+                {
+                    _repository.WriteAsync(state),
+                    _log.WriteAsync(logData)
+                };
 
-            await Task.WhenAll(persistenceTasks).ConfigureAwait(false);
+                await Task.WhenAll(persistenceTasks).ConfigureAwait(false);
+            }
+            else
+            {
+                await _repository.WriteAsync(state);
+                await _log.WriteAsync(logData);
+            }
         }
     }
 }
