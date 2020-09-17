@@ -32,6 +32,11 @@ namespace EFCoreTestApp.Sagas
             matches the given parameter and Initialize the data.
             See this line: public object Data => JsonConvert.DeserializeObject(MessagePayload);
             in EFCoreSagaStateData file.
+
+            See this line in Chronicle repositry:
+            file name: src/Chronicle/Utils/SagaExtensions.cs
+            line number: 16
+            saga.GetType().GetMethod(method, args.Select(arg => arg.GetType()).ToArray())?.Invoke(saga, args);
         */
 
         public void Initialize(SagaId id, SagaStates state, JObject data)

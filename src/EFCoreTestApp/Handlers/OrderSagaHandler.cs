@@ -13,6 +13,11 @@ namespace EFCoreTestApp.Handlers
 {
     public class OrderSagaHandler: IRequestHandler<CreateOrder>, INotificationHandler<OrderCreated>
     {
+        /*
+            NOTE: Remove ISagaUnitOfWork if the Chronicles Internal EFCore/SQL Server implementation is being used.
+            If implementing with a custom Solution enable it.
+        */
+
         private readonly ISagaCoordinator _coordinator;
         private ISagaUnitOfWork SagaUnitOfWork { get; }
 
