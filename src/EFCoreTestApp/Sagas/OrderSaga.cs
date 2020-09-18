@@ -32,11 +32,11 @@ namespace EFCoreTestApp.Sagas
             saga.GetType().GetMethod(method, args.Select(arg => arg.GetType()).ToArray())?.Invoke(saga, args);
         */
 
-        public void Initialize(SagaId id, SagaStates state, JObject data)
+        /*public void Initialize(SagaId id, SagaStates state, JObject data)
         {
             base.Initialize(id, state);
             Data = data.ToObject<CreatingOrderData>();
-        }
+        }*/
 
         public override SagaId ResolveId(object message, ISagaContext context)
         => message switch

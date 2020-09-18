@@ -2,6 +2,7 @@ using System;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using System.Linq;
 
 namespace Chronicle.Integrations.EFCore.Persistence
 {
@@ -24,7 +25,19 @@ namespace Chronicle.Integrations.EFCore.Persistence
 
         public SagaStates State { get; private set; }
 
-        public object Data => JsonConvert.DeserializeObject(MessagePayload);
+        // public object Data => JsonConvert.DeserializeObject(MessagePayload);
+        public object Data
+        {
+            get
+            {
+                var currType = Assembly.GetEntryAssembly()?.GetType(SagaType);
+                var sagaInterface = currType.GetInterfaces()
+                                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISaga<>));
+                var sagaGenericDataType = sagaInterface.GetGenericArguments().FirstOrDefault();
+                var currPayLoad = JsonConvert.DeserializeObject(MessagePayload, sagaGenericDataType);
+                return currPayLoad;
+            }
+        }
 
         public string MessagePayload { get; set; }
 

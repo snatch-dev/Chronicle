@@ -3,6 +3,7 @@ using Chronicle;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
+using System.Linq;
 
 namespace EFCoreTestApp.SagaRepository
 {
@@ -20,7 +21,6 @@ namespace EFCoreTestApp.SagaRepository
 
         public string SagaType { get; set; }
         [NotMapped]
-        // Type ISagaState.Type => Assembly.GetEntryAssembly()?.GetType(SagaType);
         Type ISagaState.Type
         {
             get
@@ -32,11 +32,14 @@ namespace EFCoreTestApp.SagaRepository
 
         public SagaStates State { get; private set; }
 
-        // public object Data => JsonConvert.DeserializeObject(MessagePayload);
         public object Data
         {
             get {
-                var currPayLoad = JsonConvert.DeserializeObject(MessagePayload);
+                var currType = Assembly.GetEntryAssembly()?.GetType(SagaType);
+                var sagaInterface = currType.GetInterfaces()
+                                    .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISaga<>));
+                var sagaGenericDataType = sagaInterface.GetGenericArguments().FirstOrDefault();
+                var currPayLoad = JsonConvert.DeserializeObject(MessagePayload, sagaGenericDataType);
                 return currPayLoad;
             } 
         }
