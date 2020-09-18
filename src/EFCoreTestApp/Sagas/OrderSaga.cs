@@ -19,13 +19,6 @@ namespace EFCoreTestApp.Sagas
             _logger = logger;
         }
 
-        /*public override void Initialize(SagaId id, SagaStates state, CreatingOrderData data)
-        {
-            base.Initialize(id, state);
-            Data = data;
-        }*/
-
-
         /*
             This  extra function is added to make the Saga & SagaLog repositroies to be ignorant of any data type.
             and since Newtonsoft is being used to cast Data as JObject, therefore a method must be present that
