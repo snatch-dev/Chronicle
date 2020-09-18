@@ -33,7 +33,7 @@ namespace Chronicle.Integrations.EFCore.Persistence
                 var currType = Assembly.GetEntryAssembly()?.GetType(SagaType);
                 var sagaInterface = currType.GetInterfaces()
                                     .FirstOrDefault(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISaga<>));
-                var sagaGenericDataType = sagaInterface.GetGenericArguments().FirstOrDefault();
+                var sagaGenericDataType = sagaInterface?.GetGenericArguments()?.FirstOrDefault();
                 var currPayLoad = JsonConvert.DeserializeObject(MessagePayload, sagaGenericDataType);
                 return currPayLoad;
             }
