@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Chronicle.Integrations.EFCore.Persistence
 {
-    public class EFCoreSagaLogData : ISagaLogData
+    internal class EFCoreSagaLogData : ISagaLogData
     {
         public int logId { get; set; }
         public string SagaId { get; set; }

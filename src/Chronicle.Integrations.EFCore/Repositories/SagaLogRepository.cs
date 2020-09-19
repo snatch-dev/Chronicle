@@ -7,18 +7,18 @@ using Chronicle.Integrations.EFCore.Persistence;
 
 namespace Chronicle.Integrations.EFCore.Repositories
 {
-    internal class SagaLogRepository : ISagaLogRepository
+    internal class SagaLogRepository<TContext> : ISagaLogRepository where TContext : DbContext
     {
-        private readonly SagaDbContext _dbContext;
+        private readonly TContext _dbContext;
 
-        public SagaLogRepository(SagaDbContext dbContext)
+        public SagaLogRepository(TContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         public async Task<IReadOnlyCollection<EFCoreSagaLogData>> ReadAsync(SagaId id, Type type)
         {
-            return await _dbContext.SagaLog
+            return await _dbContext.Set<EFCoreSagaLogData>()
                 .Where(sld => sld.SagaId == id.Id && sld.SagaType == type.FullName)
                 .ToArrayAsync();
         }
@@ -27,8 +27,7 @@ namespace Chronicle.Integrations.EFCore.Repositories
         {
             if (null == message)
                 throw new ArgumentNullException(nameof(message));
-            await _dbContext.SagaLog.AddAsync(message);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Set<EFCoreSagaLogData>().AddAsync(message);
         }
     }
 }

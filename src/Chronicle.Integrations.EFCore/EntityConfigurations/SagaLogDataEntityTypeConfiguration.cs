@@ -4,7 +4,7 @@ using Chronicle.Integrations.EFCore.Persistence;
 
 namespace Chronicle.Integrations.EFCore.EntityConfigurations
 {
-    public class SagaLogDataEntityTypeConfiguration : IEntityTypeConfiguration<EFCoreSagaLogData>
+    internal class SagaLogDataEntityTypeConfiguration : IEntityTypeConfiguration<EFCoreSagaLogData>
     {
         public void Configure(EntityTypeBuilder<EFCoreSagaLogData> builder)
         {

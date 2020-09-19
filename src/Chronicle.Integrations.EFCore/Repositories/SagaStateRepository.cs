@@ -6,42 +6,34 @@ using Chronicle.Integrations.EFCore.Persistence;
 
 namespace Chronicle.Integrations.EFCore.Repositories
 {
-    internal class SagaStateRepository : ISagaStateDBRepository
+    internal class SagaStateRepository<TContext> : ISagaStateDBRepository where TContext : DbContext
     {
-        private readonly SagaDbContext _dbContext;
+        private readonly TContext _dbContext;
 
-        public SagaStateRepository(SagaDbContext dbContext)
+        public SagaStateRepository(TContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
-
-        public async Task<EFCoreSagaStateData> GetByIdAsync(SagaId sagaId)
-        {
-            return await _dbContext.SagaState
-                .FirstOrDefaultAsync(sld => sld.SagaId == sagaId.Id);
-        }
-
         public async Task<EFCoreSagaStateData> ReadAsync(SagaId id, Type type)
         {
-            return await _dbContext.SagaState
+            return await _dbContext.Set<EFCoreSagaStateData>()
                 .FirstOrDefaultAsync(sld => sld.SagaId == id.Id && sld.SagaType == type.FullName);
         }
 
         public async Task WriteAsync(EFCoreSagaStateData sagaState)
         {
             var entity = await _dbContext
-                            .SagaState
+                            .Set<EFCoreSagaStateData>()
                             .FirstOrDefaultAsync(sld => sld.SagaId == sagaState.Id.Id && sld.SagaType == sagaState.SagaType);
             if (entity != null)
             {
-                _dbContext.SagaState.Remove(entity);
+                _dbContext.Set<EFCoreSagaStateData>().Remove(entity);
             }
 
-            await _dbContext.SagaState.AddAsync(
+            await _dbContext.Set<EFCoreSagaStateData>().AddAsync(
                 new EFCoreSagaStateData(sagaState.Id.Id, sagaState.SagaType, sagaState.State, JsonConvert.SerializeObject(sagaState.Data))
             );
-            await _dbContext.SaveChangesAsync();
         }
     }
 }
