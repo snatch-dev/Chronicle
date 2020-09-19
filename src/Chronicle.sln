@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronicle.Tests", "Chronicl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronicle.Integrations.MongoDB", "Chronicle.Integrations.MongoDB\src\Chronicle.Integrations.MongoDB.csproj", "{DFB344D1-3121-43F9-9E66-20BC6B0DD9CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCoreTestApp", "EFCoreTestApp\EFCoreTestApp.csproj", "{E47A600F-6802-4A9E-91E3-E8D213EC9195}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCoreTestAppWithCutomSaga", "EFCoreTestAppWithCutomSaga\EFCoreTestAppWithCutomSaga.csproj", "{E47A600F-6802-4A9E-91E3-E8D213EC9195}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chronicle.Integrations.EFCore", "Chronicle.Integrations.EFCore\Chronicle.Integrations.EFCore.csproj", "{F0B818F0-BDC2-48C6-9E53-3F4526558701}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronicle.Integrations.EFCore", "Chronicle.Integrations.EFCore\Chronicle.Integrations.EFCore.csproj", "{F0B818F0-BDC2-48C6-9E53-3F4526558701}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
