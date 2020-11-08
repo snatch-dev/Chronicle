@@ -28,5 +28,15 @@ namespace Chronicle.Builders
             Services.AddTransient(typeof(ISagaStateRepository), typeof(TRepository));
             return this;
         }
+
+        public IChronicleBuilder UseChronicleConfiguration(IChronicleConfiguration configuration)
+        {
+            if (configuration is null)
+            {
+                configuration = new ChronicleConfiguration();
+            }
+            Services.AddSingleton<IChronicleConfiguration>(configuration);
+            return this;
+        }
     }
 }

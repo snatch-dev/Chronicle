@@ -31,7 +31,7 @@ namespace Chronicle.Integrations.Redis.Persistence
             var sagaLogDatas = new List<RedisSagaLogData>();
             var deserializedSagaLogDatas = new List<RedisSagaLogData>();
             var cachedSagaLogDatas = await cache.GetStringAsync(LogId(id, sagaType));
-            
+
             if (!string.IsNullOrWhiteSpace(cachedSagaLogDatas))
             {
                 sagaLogDatas = JsonConvert.DeserializeObject<List<RedisSagaLogData>>(cachedSagaLogDatas);
@@ -39,7 +39,7 @@ namespace Chronicle.Integrations.Redis.Persistence
                 {
                     {
                         var message = (sld.Message as JObject)?.ToObject(sld.MessageType);
-                        deserializedSagaLogDatas.Add(new RedisSagaLogData(sld.Id, sld.Type, sld.CreatedAt, message, sld.MessageType));
+                        deserializedSagaLogDatas.Add(new RedisSagaLogData { SagaId = sld.Id, Type = sld.Type, CreatedAt = sld.CreatedAt, Message = message, MessageType = sld.MessageType });
                     }
                 });
             }
@@ -54,7 +54,7 @@ namespace Chronicle.Integrations.Redis.Persistence
             }
             var sagaLogDatas = (await ReadAsync(logData.Id, logData.Type)).ToList();
 
-            var sagaLogData = new RedisSagaLogData(logData.Id, logData.Type, logData.CreatedAt, logData.Message, logData.Message.GetType());
+            var sagaLogData = new RedisSagaLogData { SagaId = logData.Id, Type = logData.Type, CreatedAt = logData.CreatedAt, Message = logData.Message, MessageType = logData.Message.GetType() };
 
             sagaLogDatas.Add(sagaLogData);
 

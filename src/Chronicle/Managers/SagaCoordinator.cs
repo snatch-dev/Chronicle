@@ -53,7 +53,7 @@ namespace Chronicle.Managers
             {
                 var (isInitialized, state) = await _initializer.TryInitializeAsync(saga, id, message);
 
-                if (!isInitialized)
+                if (!isInitialized || state.State is SagaStates.Completed)
                 {
                     return;
                 }

@@ -11,6 +11,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Chronicle.Tests", "Chronicl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chronicle.Integrations.MongoDB", "Chronicle.Integrations.MongoDB\src\Chronicle.Integrations.MongoDB.csproj", "{DFB344D1-3121-43F9-9E66-20BC6B0DD9CC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Chronicle.Integrations.Redis", "Chronicle.Integrations.Redis", "{3B661443-315C-4A0F-A67E-62A792AF35D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chronicle.Integrations.Redis", "Chronicle.Integrations.Redis\src\Chronicle.Integrations.Redis.csproj", "{755F7A4D-7FC3-444E-86D3-528787961B2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,11 +73,26 @@ Global
 		{DFB344D1-3121-43F9-9E66-20BC6B0DD9CC}.Release|x64.Build.0 = Release|Any CPU
 		{DFB344D1-3121-43F9-9E66-20BC6B0DD9CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{DFB344D1-3121-43F9-9E66-20BC6B0DD9CC}.Release|x86.Build.0 = Release|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Debug|x64.Build.0 = Debug|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Debug|x86.Build.0 = Debug|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Release|x64.ActiveCfg = Release|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Release|x64.Build.0 = Release|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Release|x86.ActiveCfg = Release|Any CPU
+		{755F7A4D-7FC3-444E-86D3-528787961B2F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F6DDA96B-847E-4F6D-86EC-126800155219}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{755F7A4D-7FC3-444E-86D3-528787961B2F} = {3B661443-315C-4A0F-A67E-62A792AF35D3}
 	EndGlobalSection
 EndGlobal
