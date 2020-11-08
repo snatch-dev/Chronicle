@@ -7,7 +7,7 @@ namespace Chronicle.Integrations.EFCore.Persistence
 {
     internal class EFCoreSagaLogData : ISagaLogData
     {
-        public int logId { get; set; }
+        public int LogId { get; set; }
         public string SagaId { get; set; }
         [NotMapped]
         public SagaId Id => SagaId;

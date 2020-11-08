@@ -106,36 +106,7 @@ The result looks as follows:
 # Sample Application using Chronicle Implementation of EFCore   
 ##### Application Name: `EFCoreTestAppWithChronicleSaga`  
 There are certain prerequisites to fulfill inorder for the internal implementation to work:  
-1. Extend `ISagaUnitOfWork<TContext>` from `Chronicle.Integrations.EFCore.Repositories` as shown below:
-```cs
-using Microsoft.EntityFrameworkCore;
-using Chronicle.Integrations.EFCore.Repositories;
-namespace EFCoreTestApp.Persistence
-{
-    public interface ICustomUnitOfWork<TContext> : ISagaUnitOfWork<TContext> 
-        where TContext : DbContext
-    {
-    }
-    
-    public class SagaUnitOfWork<TContext> : ICustomUnitOfWork<TContext> 
-        where TContext : DbContext
-    {
-        protected readonly TContext DbContext;
-
-        public SagaUnitOfWork(TContext dbContext)
-        {
-            DbContext = dbContext;
-        }
-
-        public async Task CommitAsync(CancellationToken cancellationToken)
-        {
-            await DbContext.SaveChangesAsync(cancellationToken);
-        }
-
-    }
-}
-```
-2. While creating the DBContext make sure that the Saga related Tables have been initialized, by invoking the `Create` Method on `ConfigureSagaTables`:
+1. While creating the DBContext make sure that the Saga related Tables have been initialized, by invoking the `Create` Method on `ConfigureSagaTables`:
 ```cs
 using Microsoft.EntityFrameworkCore;
 using Chronicle.Integrations.EFCore.EntityConfigurations;
@@ -165,24 +136,13 @@ services.AddDbContext<SagaDbContext>(builder =>
 {
     var connStr = this.Configuration.GetConnectionString("db");
     builder.UseSqlServer(connStr);
-});
-services.AddScoped<ICustomUnitOfWork<SagaDbContext>, SagaUnitOfWork<SagaDbContext>>();
+}, ServiceLifetime.Transient);
+
 static void TestChronicleBuilder(IChronicleBuilder cb)
 {
     cb.UseEFCorePersistence<SagaDbContext>();
 }
 services.AddChronicle(TestChronicleBuilder);
-```
-4. Since unit of work is being used and is passed by the Application, therefore, do not forget to call `CommitAsync` mentod after all the work has been completed. Example can bee seen in the this file: Handlers -> OrderSagaHandler.cs
-```cs
-public async Task<Unit> Handle(CreateOrder command, CancellationToken cancellationToken)
-{
-    await _coordinator.ProcessAsync(command, SagaContext.Empty);
-    // once every thing is processed in the handler, commit changes to DB.
-    // This can be moved else where depending on the user needs.
-    await SagaUnitOfWork.CommitAsync();
-    return Unit.Value;
-}
 ```
 
 # Sample Application using Cutom Implementaion of `ISagaLog` & `ISagaStateRepository` with EFCore  

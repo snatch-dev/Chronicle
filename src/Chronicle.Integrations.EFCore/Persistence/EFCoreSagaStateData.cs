@@ -10,14 +10,7 @@ namespace Chronicle.Integrations.EFCore.Persistence
     {
         public string SagaId { get; set; }
         [NotMapped]
-        public SagaId Id
-        {
-            get
-            {
-                var currId = (SagaId)SagaId.ToString();
-                return currId;
-            }
-        }
+        public SagaId Id => SagaId.ToString();
 
         public string SagaType { get; set; }
         [NotMapped]

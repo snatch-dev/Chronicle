@@ -32,17 +32,11 @@ namespace EFCoreTestAppWithChronicleSaga
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            /*
-                MAKE Sure that both SagaDbContext and ICustomUnitOfWork<SagaDbContext> are registered as Scoped.
-                Since Unit of Work is being used, therefore the Chronicle EFCore doesnt save changes to DB,
-                infact it gives control back to the application to commit the changes as per requirement.
-            */
             services.AddDbContext<SagaDbContext>(builder =>
             {
                 var connStr = this.Configuration.GetConnectionString("db");
                 builder.UseSqlServer(connStr);
-            });
-            services.AddScoped<ICustomUnitOfWork<SagaDbContext>, SagaUnitOfWork<SagaDbContext>>();
+            }, ServiceLifetime.Transient);
 
             services.AddMediatR(new[]{
                 typeof(Startup).Assembly

@@ -1,27 +1,32 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Chronicle.Integrations.EFCore.Repositories;
 
 namespace Chronicle.Integrations.EFCore.Persistence
 {
-    internal class EFCoreSagaLog : ISagaLog
+    internal class EFCoreSagaLog<TContext> : ISagaLog where TContext : DbContext
     {
-        private readonly ISagaLogRepository SagaLogRepository;
+        private readonly TContext _dbContext;
 
-        public EFCoreSagaLog(ISagaLogRepository _sagaLogRepository)
+        public EFCoreSagaLog(TContext dbContext)
         {
-            SagaLogRepository = _sagaLogRepository ?? throw new ArgumentNullException(nameof(_sagaLogRepository));
+            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         }
 
         public async Task<IEnumerable<ISagaLogData>> ReadAsync(SagaId id, Type type)
-           => await SagaLogRepository.ReadAsync(id, type);
+           => await _dbContext.Set<EFCoreSagaLogData>()
+                .Where(sld => sld.SagaId == id.Id && sld.SagaType == type.FullName)
+                .ToArrayAsync();
 
         public async Task WriteAsync(ISagaLogData message)
         {
-            await SagaLogRepository
-                .WriteAsync(new EFCoreSagaLogData(message.Id.Id, message.Type.ToString(), message.CreatedAt, JsonConvert.SerializeObject(message.Message)));
+            if (null == message)
+                throw new ArgumentNullException(nameof(message));
+            await _dbContext.Set<EFCoreSagaLogData>().AddAsync(new EFCoreSagaLogData(message.Id.Id, message.Type.ToString(), message.CreatedAt, JsonConvert.SerializeObject(message.Message)));
+            await _dbContext.SaveChangesAsync();
         }
     }
 

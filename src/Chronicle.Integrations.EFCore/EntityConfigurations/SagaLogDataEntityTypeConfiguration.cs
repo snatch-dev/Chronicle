@@ -9,8 +9,8 @@ namespace Chronicle.Integrations.EFCore.EntityConfigurations
         public void Configure(EntityTypeBuilder<EFCoreSagaLogData> builder)
         {
             builder.ToTable("SagaLog", "dbo");
-            builder.HasKey(c => c.logId);
-            builder.Property(c => c.logId).ValueGeneratedOnAdd();
+            builder.HasKey(c => c.LogId);
+            builder.Property(c => c.LogId).ValueGeneratedOnAdd();
             builder.Ignore(c => c.Id);
             builder.Ignore(c => c.Message);
         }
