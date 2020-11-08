@@ -103,6 +103,86 @@ The result looks as follows:
 
 ![Result](https://user-images.githubusercontent.com/7096476/53180548-0c885900-35f6-11e9-864b-6b6d13641f2a.png)
 
+# Sample Application using Chronicle Implementation of EFCore   
+##### Application Name: `EFCoreTestAppWithChronicleSaga`  
+There are certain prerequisites to fulfill inorder for the internal implementation to work:  
+1. While creating the DBContext make sure that the Saga related Tables have been initialized, by invoking the `Create` Method on `ConfigureSagaTables`:
+```cs
+using Microsoft.EntityFrameworkCore;
+using Chronicle.Integrations.EFCore.EntityConfigurations;
+
+namespace EFCoreTestApp.Persistence
+{
+    public class SagaDbContext : DbContext
+    {
+        public SagaDbContext(DbContextOptions<SagaDbContext> options)
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // NOTE: MAKE SURE SAGA MODELS ARE CREATED IN DB
+            ConfigureSagaTables.Create(modelBuilder);
+            // Configure other models for the Application.
+        }
+    }
+}
+```
+3. Configure the following in the Startup.cs file:
+```cs
+services.AddDbContext<SagaDbContext>(builder =>
+{
+    var connStr = this.Configuration.GetConnectionString("db");
+    builder.UseSqlServer(connStr);
+}, ServiceLifetime.Transient);
+
+static void TestChronicleBuilder(IChronicleBuilder cb)
+{
+    cb.UseEFCorePersistence<SagaDbContext>();
+}
+services.AddChronicle(TestChronicleBuilder);
+```
+
+# Sample Application using Cutom Implementaion of `ISagaLog` & `ISagaStateRepository` with EFCore  
+##### Application Name: `EFCoreTestAppWithCutomSaga`  
+
+DB connection string is in **appsettings.json** file under property **ConnectionStrings->db**.
+Persistence has been added under folder: EFCoreTestApp-> Persistence  
+Custom Implementation for `ISagaLog` & `ISagaStateRepository` has been added under folder:   EFCoreTestApp-> SagaRepository  
+Custom Saga Persistence has been applied in Starup file using the following code:
+```
+static void TestChronicleBuilder(IChronicleBuilder cb)
+{
+    cb.UseSagaLog<EFCoreSagaLog>();
+    cb.UseSagaStateRepository<EFCoreSagaState>();
+}
+services.AddChronicle(TestChronicleBuilder);
+```
+Example Saga has been created under folder: **EFCoreTestApp-> Sagas**  
+filename: **OrderSaga.cs**  
+
+**Initialize unique Saga:**
+POST http://localhost:{PORT_NUMBER}/api/order/
+```json
+{
+    "orderId": "1045dbed-1520-47e3-bdfd-b6de59abcfb2",
+    "customerId": "1045dbed-1520-47e3-bdfd-b6de59abcfb2",
+    "parcelId": "1045dbed-1520-47e3-bdfd-b6de59abcfb2"
+}
+```
+**Update the existing Saga:**
+POST http://localhost:{PORT_NUMBER}/api/order/created
+```json
+{
+    "orderId": "1045dbed-1520-47e3-bdfd-b6de59abcfb2"
+}
+```
+Similary the Saga Data and logs can be retrieved using the following endpoints:
+GET http://localhost:{PORT_NUMBER}/api/saga/{SAGA_ID}  
+GET http://localhost:{PORT_NUMBER}/api/saga/{SAGA_ID}/logs  
+
 # Documentation
 If you're looking for documentation, you can find it [here](https://chronicle.readthedocs.io/en/latest/).
 
