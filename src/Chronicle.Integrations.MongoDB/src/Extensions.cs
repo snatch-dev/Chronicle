@@ -57,7 +57,5 @@ namespace Chronicle.Integrations.MongoDB
 
             return builder;
         }
-
-      
     }
 }
