@@ -1,8 +1,8 @@
 using System;
 using Chronicle.Integrations.MongoDB.Persistence;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace Chronicle.Integrations.MongoDB
@@ -39,6 +39,14 @@ namespace Chronicle.Integrations.MongoDB
 
             IMongoDatabase GetDatabase(IServiceProvider serviceProvider)
                 => new MongoClient(settings.ConnectionString).GetDatabase(settings.Database);
+        }
+
+        public static IChronicleBuilder UseMongoPersistence(this IChronicleBuilder builder, MongoClientSettings mongoSettings, string databaseName)
+        {
+            return builder.UseMongoPersistence(GetDatabase);
+
+            IMongoDatabase GetDatabase(IServiceProvider serviceProvider)
+                => new MongoClient(mongoSettings).GetDatabase(databaseName);
         }
 
         private static IChronicleBuilder UseMongoPersistence(this IChronicleBuilder builder, Func<IServiceProvider,IMongoDatabase> getDatabase)
