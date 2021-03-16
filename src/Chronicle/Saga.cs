@@ -27,7 +27,6 @@ namespace Chronicle
         public virtual void Reject(Exception innerException = null)
         {
             State = SagaStates.Rejected;
-            throw new ChronicleException("Saga rejection called by method", innerException);
         }
 
         public virtual Task RejectAsync(Exception innerException = null)
