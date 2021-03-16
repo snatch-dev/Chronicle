@@ -58,14 +58,8 @@ namespace Chronicle.Managers
                     return;
                 }
 
-                try
-                {
-                    await _processor.ProcessAsync(saga, message, state, context);
-                }
-                finally
-                {
-                    await _postProcessor.ProcessAsync(saga, message, context, onCompleted, onRejected);
-                }
+                await _processor.ProcessAsync(saga, message, state, context);
+                await _postProcessor.ProcessAsync(saga, message, context, onCompleted, onRejected);
             }
         }
     }
