@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Chronicle.Async;
+using AsyncKeyedLock;
 
 namespace Chronicle.Managers
 {
@@ -11,7 +11,11 @@ namespace Chronicle.Managers
         private readonly ISagaInitializer _initializer;
         private readonly ISagaProcessor _processor;
         private readonly ISagaPostProcessor _postProcessor;
-        private static readonly KeyedLocker Locker = new KeyedLocker();
+        private static readonly AsyncKeyedLocker<string> _asyncKeyedLocker = new(o =>
+        {
+            o.PoolSize = 20;
+            o.PoolInitialFill = 1;
+        });
 
         public SagaCoordinator(ISagaSeeker seeker, ISagaInitializer initializer, ISagaProcessor processor,
             ISagaPostProcessor postProcessor)
@@ -49,7 +53,7 @@ namespace Chronicle.Managers
             var saga = (ISaga)action;
             var id = saga.ResolveId(message, context);
 
-            using (await Locker.LockAsync(id))
+            using (await _asyncKeyedLocker.LockAsync(id.Id).ConfigureAwait(false))
             {
                 var (isInitialized, state) = await _initializer.TryInitializeAsync(saga, id, message);
 
