@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="Chronicle_" Version="3.*" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
-    <PackageReference Include="MongoDB.Driver" Version="2.9.2" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
   </ItemGroup>
 
 </Project>
