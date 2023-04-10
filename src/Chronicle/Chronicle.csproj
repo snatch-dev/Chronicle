@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AsyncKeyedLock" Version="6.2.0" />
+    <PackageReference Include="AsyncKeyedLock" Version="6.2.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0" />
     <PackageReference Include="Scrutor" Version="3.1.0" />
   </ItemGroup>
